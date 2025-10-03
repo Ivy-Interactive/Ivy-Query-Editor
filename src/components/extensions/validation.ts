@@ -78,7 +78,9 @@ class ValidationPlugin {
     }
 
     // Create error underline decorations
-    const decorations = result.errors.map(error => {
+    const decorations: Array<ReturnType<ReturnType<typeof Decoration.mark>['range']>> = [];
+
+    for (const error of result.errors) {
       const from = Math.min(error.start, this.view.state.doc.length);
       let to = Math.min(error.end || error.start + 1, this.view.state.doc.length);
 
@@ -89,16 +91,16 @@ class ValidationPlugin {
 
       // Skip if still invalid (e.g., at the very end of an empty document)
       if (from >= this.view.state.doc.length || to <= from) {
-        return null;
+        continue;
       }
 
-      return Decoration.mark({
+      decorations.push(Decoration.mark({
         class: 'cm-query-error',
         attributes: {
           title: error.message,
         },
-      }).range(from, to);
-    }).filter(Boolean);
+      }).range(from, to));
+    }
 
     return Decoration.set(decorations);
   }

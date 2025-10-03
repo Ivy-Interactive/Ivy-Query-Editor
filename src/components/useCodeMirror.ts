@@ -11,6 +11,7 @@ import { createBaseExtensions } from './extensions/base';
 import { createHighlightingExtension } from './extensions/highlighting';
 import { createValidationExtension } from './extensions/validation';
 import { createFormattingExtension } from './extensions/formatting';
+import { autocompleteExtension } from './extensions/autocomplete';
 
 interface UseCodeMirrorOptions {
   container: HTMLElement | null;
@@ -70,6 +71,9 @@ export function useCodeMirror({
 
       // Auto-formatting
       createFormattingExtension(columns),
+
+      // Autocomplete
+      autocompleteExtension(columns),
 
       // Update listener for onChange
       EditorView.updateListener.of((update: ViewUpdate) => {
