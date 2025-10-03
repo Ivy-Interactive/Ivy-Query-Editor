@@ -1,0 +1,16 @@
+{
+  "prd_directory": "docs/prd",
+  "review_strictness": "normal",
+  "max_iterations_per_component": 3,
+  "auto_fix_minor_issues": true,
+  "require_user_approval": {
+    "after_planning": true,
+    "after_each_component": false,
+    "before_final": true
+  },
+  "test_configuration": {
+    "run_after_each_component": true,
+    "coverage_threshold": 80,
+    "run_integration_tests": true
+  }
+}

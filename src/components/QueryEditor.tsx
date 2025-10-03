@@ -9,7 +9,6 @@ import { QueryEditorProps, QueryEditorChangeEvent } from "./types";
 import { useCodeMirror } from "./useCodeMirror";
 import { parseQuery } from "../parser/QueryParser";
 import { cn } from "../lib/utils";
-import styles from "./QueryEditor.module.css";
 
 /**
  * QueryEditor component - A CodeMirror-based editor for filter queries
@@ -116,7 +115,13 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
           setContainer(el);
         }
       }}
-      className={cn(styles.editor, className)}
+      className={cn(
+        "rounded-lg border bg-background text-foreground",
+        "transition-all duration-200 cursor-text",
+        "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
+        "cm-editor-container", // For targeting CodeMirror styles
+        className
+      )}
       style={{ height: heightStyle }}
       data-theme={theme}
       onClick={handleContainerClick}

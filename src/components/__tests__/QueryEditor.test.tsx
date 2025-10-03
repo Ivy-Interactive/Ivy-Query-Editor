@@ -16,12 +16,7 @@ const mockColumns: ColumnDef[] = [
   { id: 'active', name: 'active', type: DataType.BOOLEAN },
 ];
 
-// Mock CSS module (Vitest doesn't need mocking for CSS modules with proper config)
-vi.mock('../QueryEditor.module.css', () => ({
-  default: {
-    editor: 'editor',
-  }
-}));
+// No CSS modules to mock anymore - using Tailwind classes
 
 describe('QueryEditor', () => {
   describe('Rendering', () => {

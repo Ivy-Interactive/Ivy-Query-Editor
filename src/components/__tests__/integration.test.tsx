@@ -19,12 +19,7 @@ const columns: ColumnDef[] = [
   { id: "completed", name: "completed", type: DataType.BOOLEAN },
 ];
 
-// Mock CSS module
-vi.mock("../QueryEditor.module.css", () => ({
-  default: {
-    editor: 'editor',
-  }
-}));
+// No CSS modules to mock anymore - using Tailwind classes
 
 describe("QueryEditor Integration", () => {
   describe("Syntax Highlighting", () => {

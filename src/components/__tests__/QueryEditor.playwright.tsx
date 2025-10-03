@@ -167,18 +167,18 @@ test.describe('QueryEditor Component', () => {
     await expect(component).toBeVisible();
   });
 
-  test('should handle multiple themes', async ({ mount }) => {
-    // Test light theme
-    const lightComponent = await mount(
+  test('should render with light theme', async ({ mount }) => {
+    const component = await mount(
       <QueryEditor value="[status] equals 'open'" columns={mockColumns} theme="light" />
     );
-    await expect(lightComponent).toHaveAttribute('data-theme', 'light');
+    await expect(component).toHaveAttribute('data-theme', 'light');
+  });
 
-    // Test dark theme
-    const darkComponent = await mount(
+  test('should render with dark theme', async ({ mount }) => {
+    const component = await mount(
       <QueryEditor value="[status] equals 'open'" columns={mockColumns} theme="dark" />
     );
-    await expect(darkComponent).toHaveAttribute('data-theme', 'dark');
+    await expect(component).toHaveAttribute('data-theme', 'dark');
   });
 
   test('should call onChange when text changes', async ({ mount, page }) => {

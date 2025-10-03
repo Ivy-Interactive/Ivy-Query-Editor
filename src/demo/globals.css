@@ -57,3 +57,115 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /* CodeMirror Editor Styles */
+  .cm-editor-container .cm-editor {
+    @apply bg-transparent h-full;
+  }
+
+  .cm-editor-container .cm-editor.cm-focused {
+    @apply outline-none;
+  }
+
+  .cm-editor-container .cm-content {
+    @apply px-4 py-3 font-mono text-sm cursor-text;
+    min-height: auto;
+  }
+
+  .cm-editor-container .cm-line {
+    @apply leading-relaxed;
+  }
+
+  .cm-editor-container .cm-placeholder {
+    @apply text-muted-foreground/60 italic;
+  }
+
+  .cm-editor-container .cm-cursor {
+    @apply border-l-2 border-primary;
+  }
+
+  .cm-editor-container .cm-selectionBackground {
+    @apply bg-primary/20;
+  }
+
+  .cm-editor-container .cm-gutters {
+    @apply border-r border-border bg-muted/30;
+  }
+
+  .cm-editor-container .cm-lineNumbers {
+    @apply text-muted-foreground text-xs;
+  }
+
+  .cm-editor-container .cm-activeLine {
+    @apply bg-muted/50;
+  }
+
+  .cm-editor-container .cm-matchingBracket {
+    @apply bg-primary/30 font-bold;
+  }
+
+  /* Syntax highlighting */
+  .cm-editor-container .cm-query-field {
+    @apply text-blue-600 dark:text-blue-400 font-semibold;
+  }
+
+  .cm-editor-container .cm-query-string {
+    @apply text-green-600 dark:text-green-400;
+  }
+
+  .cm-editor-container .cm-query-number {
+    @apply text-purple-600 dark:text-purple-400;
+  }
+
+  .cm-editor-container .cm-query-boolean {
+    @apply text-red-600 dark:text-red-400;
+  }
+
+  .cm-editor-container .cm-query-keyword {
+    @apply text-pink-600 dark:text-pink-400 font-semibold;
+  }
+
+  .cm-editor-container .cm-query-operator {
+    @apply text-cyan-600 dark:text-cyan-400;
+  }
+
+  .cm-editor-container .cm-query-bracket {
+    @apply text-slate-600 dark:text-slate-400 font-bold;
+  }
+
+  /* Error styling */
+  .cm-editor-container .cm-query-error {
+    @apply underline decoration-destructive decoration-wavy underline-offset-4;
+  }
+
+  .cm-editor-container .cm-lintRange-error {
+    @apply bg-destructive/10;
+  }
+
+  /* Tooltips */
+  .cm-editor-container .cm-tooltip {
+    @apply rounded-md border bg-popover text-popover-foreground shadow-md px-3 py-1.5 text-sm;
+  }
+
+  .cm-editor-container .cm-tooltip-lint {
+    @apply max-w-xs;
+  }
+
+  /* Autocomplete */
+  .cm-editor-container .cm-tooltip-autocomplete {
+    @apply rounded-lg border bg-popover shadow-lg;
+  }
+
+  .cm-editor-container .cm-tooltip-autocomplete ul {
+    @apply m-0 p-1;
+  }
+
+  .cm-editor-container .cm-tooltip-autocomplete ul li {
+    @apply rounded px-2 py-1 text-sm;
+  }
+
+  .cm-editor-container .cm-tooltip-autocomplete ul li[aria-selected="true"] {
+    @apply bg-accent text-accent-foreground;
+  }
+}

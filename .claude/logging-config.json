@@ -1,0 +1,10 @@
+{
+  "log_directory": ".claude/logs",
+  "log_level": "info",
+  "log_agents": true,
+  "log_file_changes": true,
+  "log_test_results": true,
+  "log_reviews": true,
+  "create_summary": true,
+  "summary_format": "markdown"
+}
