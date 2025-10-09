@@ -1,0 +1,41 @@
+# Source files
+src/
+docs/
+scripts/
+tools/
+
+# Config files
+.claude/
+.git/
+.github/
+tsconfig.json
+vite.config.ts
+vite.config.lib.ts
+vitest.config.ts
+playwright.config.ts
+tailwind.config.js
+postcss.config.mjs
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.test.tsx
+**/*.spec.ts
+**/*.spec.tsx
+playwright/
+test-results/
+playwright-report/
+coverage/
+
+# Demo app
+index.html
+
+# Build artifacts
+*.tsbuildinfo
+.DS_Store
+node_modules/
+
+# Documentation that shouldn't be published
+TODO.md
+TESTING.md
+CONTRIBUTING.md
