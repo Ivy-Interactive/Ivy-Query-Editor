@@ -1,37 +1,52 @@
 # Documentation
 
-This directory contains all project documentation.
+This directory contains all project documentation organized by topic.
 
 ## Structure
 
-- **`prd/`** - Product Requirements Documents
-  - `template.md` - PRD template for new features
-  - `example-user-authentication.md` - Example PRD
-  - Your feature PRDs go here
+### 📦 Publishing (`publishing/`)
+Documentation related to npm package publishing:
+- `PUBLISH-NOW.md` - Final verification checklist (ready to publish)
+- `READY-TO-PUBLISH.md` - Comprehensive publishing guide
+- `PUBLISH-CHECKLIST.md` - Pre-publish checklist
+- `CHANGES.md` - Summary of all changes made for publishing
 
-- **`guides/`** - User guides and tutorials
-  - `README-ORCHESTRATOR.md` - Complete guide to the multi-agent system
+### 🛠️ Development (`development/`)
+Development-related documentation:
+- `TODO.md` - Feature roadmap and known issues
+- `TESTING.md` - Testing guide and strategy
 
-- **`workflows/`** - Workflow instructions and templates
-  - `START-ORCHESTRATOR-PROMPT.md` - Ready-to-use orchestrator prompt
+### 📋 PRDs (`prd/`)
+Product Requirements Documents:
+- `template.md` - PRD template for new features
+- `example-user-authentication.md` - Example PRD
+- Feature-specific PRDs (part1-part5)
 
-- **`api/`** - API documentation (create as needed)
+### 📚 Guides (`guides/`)
+User and developer guides:
+- `README-ORCHESTRATOR.md` - Multi-agent orchestrator guide
 
-- **`architecture/`** - Architecture and design docs (create as needed)
+### 🔧 Workflows (`workflows/`)
+Workflow instructions:
+- `START-ORCHESTRATOR-PROMPT.md` - Orchestrator activation prompt
+
+### ⚙️ Grammar (`grammar/`)
+ANTLR4 grammar files:
+- `Filters.g4` - Filter query language grammar
 
 ## Quick Links
 
-- [Get Started with the Orchestrator](workflows/START-ORCHESTRATOR-PROMPT.md)
-- [Orchestrator System Guide](guides/README-ORCHESTRATOR.md)
-- [PRD Template](prd/template.md)
-- [Example PRD](prd/example-user-authentication.md)
+### For Publishing
+→ Ready to publish? Start here: [`publishing/PUBLISH-NOW.md`](publishing/PUBLISH-NOW.md)
 
-## Documentation Standards
+### For Development
+→ See feature roadmap: [`development/TODO.md`](development/TODO.md)
+→ Testing guide: [`development/TESTING.md`](development/TESTING.md)
 
-When creating documentation:
-1. Place all docs in appropriate `docs/` subdirectories
-2. Use clear, descriptive filenames
-3. Include table of contents for long documents
-4. Add examples where helpful
-5. Keep docs up-to-date with code changes
-6. Link between related documents
+### For Usage
+→ API documentation: [`USAGE.md`](USAGE.md)
+→ Main README: [`../README.md`](../README.md)
+
+### For Feature Planning
+→ PRD template: [`prd/template.md`](prd/template.md)
+→ Orchestrator guide: [`guides/README-ORCHESTRATOR.md`](guides/README-ORCHESTRATOR.md)
