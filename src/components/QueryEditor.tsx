@@ -111,7 +111,9 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
     <div
       ref={(el) => {
         // Use type assertion to handle ref callback
-        (containerRef as React.MutableRefObject<HTMLDivElement | null>).current = el;
+        (
+          containerRef as React.MutableRefObject<HTMLDivElement | null>
+        ).current = el;
         if (el) {
           setContainer(el);
         }

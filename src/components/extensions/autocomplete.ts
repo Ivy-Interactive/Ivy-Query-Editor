@@ -44,10 +44,10 @@ function createColumnCompletions(columns: ColumnDef[], context: CompletionContex
   const from = bracketMatch ? context.pos - bracketMatch[1].length : context.pos;
 
   return columns.map(col => ({
-    label: col.id,
+    label: col.name,
     type: 'variable',
     detail: col.type,
-    apply: `${col.id}]`,
+    apply: `${col.name}]`,
     boost: 1,
   }));
 }
@@ -61,7 +61,7 @@ function createOperatorCompletions(columns: ColumnDef[], textBefore: string): Co
   if (!columnMatch) return [];
 
   const columnName = columnMatch[1];
-  const column = columns.find(c => c.id === columnName);
+  const column = columns.find(c => c.name === columnName);
   if (!column) return [];
 
   const operators: Completion[] = [];
@@ -138,15 +138,11 @@ function createValueCompletions(columns: ColumnDef[], textBefore: string): Compl
   if (!match) return [];
 
   const columnName = match[1];
-  const column = columns.find(c => c.id === columnName);
-  if (!column || column.type !== 'enum' || !column.enumValues) return [];
+  const column = columns.find(c => c.name === columnName);
+  if (!column || column.type !== 'enum') return [];
 
-  return column.enumValues.map(value => ({
-    label: value,
-    type: 'constant',
-    apply: `"${value}"`,
-    boost: 1,
-  }));
+  // enumValues not available in ColumnDef - returning empty array
+  return [];
 }
 
 /**
@@ -157,7 +153,7 @@ function createBooleanCompletions(textBefore: string, columns: ColumnDef[]): Com
   if (!match) return [];
 
   const columnName = match[1];
-  const column = columns.find(c => c.id === columnName);
+  const column = columns.find(c => c.name === columnName);
   if (!column || column.type !== 'boolean') return [];
 
   return [

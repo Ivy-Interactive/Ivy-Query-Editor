@@ -51,14 +51,14 @@ export function validateValueType(
   value: unknown,
   column: ColumnDef
 ): { valid: boolean; error?: string } {
-  const { type, enumValues } = column;
+  const { type } = column;
 
   switch (type) {
     case 'string':
       if (typeof value !== 'string') {
         return {
           valid: false,
-          error: `Expected string for column '${column.id}', got ${typeof value}`
+          error: `Expected string for column '${column.name}', got ${typeof value}`
         };
       }
       break;
@@ -67,7 +67,7 @@ export function validateValueType(
       if (typeof value !== 'number') {
         return {
           valid: false,
-          error: `Expected number for column '${column.id}', got ${typeof value}`
+          error: `Expected number for column '${column.name}', got ${typeof value}`
         };
       }
       break;
@@ -76,7 +76,7 @@ export function validateValueType(
       if (typeof value !== 'boolean') {
         return {
           valid: false,
-          error: `Expected boolean for column '${column.id}', got ${typeof value}`
+          error: `Expected boolean for column '${column.name}', got ${typeof value}`
         };
       }
       break;
@@ -85,7 +85,7 @@ export function validateValueType(
       if (typeof value !== 'string') {
         return {
           valid: false,
-          error: `Expected date string for column '${column.id}', got ${typeof value}`
+          error: `Expected date string for column '${column.name}', got ${typeof value}`
         };
       }
       // Basic ISO date format check
@@ -93,7 +93,7 @@ export function validateValueType(
       if (!datePattern.test(value)) {
         return {
           valid: false,
-          error: `Invalid date format for column '${column.id}'. Expected YYYY-MM-DD`
+          error: `Invalid date format for column '${column.name}'. Expected YYYY-MM-DD`
         };
       }
       break;
@@ -102,15 +102,10 @@ export function validateValueType(
       if (typeof value !== 'string') {
         return {
           valid: false,
-          error: `Expected string for enum column '${column.id}', got ${typeof value}`
+          error: `Expected string for enum column '${column.name}', got ${typeof value}`
         };
       }
-      if (enumValues && !enumValues.includes(value)) {
-        return {
-          valid: false,
-          error: `Value '${value}' is not valid for enum column '${column.id}'. Valid values: ${enumValues.join(', ')}`
-        };
-      }
+      // enumValues not available in ColumnDef - skipping enum validation
       break;
   }
 

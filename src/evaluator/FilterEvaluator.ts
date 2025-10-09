@@ -5,7 +5,7 @@
  */
 
 import { FilterGroup, Filter, Condition } from '../types/filter';
-import { ColumnDef } from '../types/column';
+import { ColumnDef, ColumnType } from '../types/column';
 import { getOperator } from './Comparators';
 
 /**
@@ -42,7 +42,7 @@ export function evaluateFilter(
 ): boolean {
   try {
     // Create column map for quick lookup
-    const columnMap = new Map(columns.map(col => [col.id, col]));
+    const columnMap = new Map(columns.map(col => [col.name, col]));
 
     // Evaluate with depth tracking
     return evaluateFilterGroup(filter, row, columnMap, 0);
@@ -145,7 +145,7 @@ function evaluateCondition(
   const columnValue = row[condition.column];
 
   // Call the operator function
-  return operatorFunc(columnValue, condition.args || [], column.type);
+  return operatorFunc(columnValue, condition.args || [], column.type as ColumnType);
 }
 
 /**

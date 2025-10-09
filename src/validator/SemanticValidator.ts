@@ -4,7 +4,7 @@
  */
 
 import { FilterGroup, Filter, Condition } from '../types/filter';
-import { ColumnDef } from '../types/column';
+import { ColumnDef, ColumnType } from '../types/column';
 import { ParseError } from '../types/parser';
 import {
   isOperatorCompatible,
@@ -29,7 +29,7 @@ export class SemanticValidator {
   private errors: ParseError[];
 
   constructor(columns: ColumnDef[]) {
-    this.columns = new Map(columns.map(col => [col.id, col]));
+    this.columns = new Map(columns.map(col => [col.name, col]));
     this.errors = [];
   }
 
@@ -79,7 +79,7 @@ export class SemanticValidator {
 
     // Check operator compatibility
     if (condition.function === 'isBlank' || condition.function === 'isNotBlank') {
-      if (!isBlankOperatorCompatible(column.type, condition.function)) {
+      if (!isBlankOperatorCompatible(column.type as ColumnType, condition.function)) {
         this.addError(
           `Operator '${getOperatorDisplayName(condition.function)}' is not compatible with type '${column.type}'`,
           0,
@@ -90,7 +90,7 @@ export class SemanticValidator {
       return;
     }
 
-    if (!isOperatorCompatible(column.type, condition.function)) {
+    if (!isOperatorCompatible(column.type as ColumnType, condition.function)) {
       this.addError(
         `Operator '${getOperatorDisplayName(condition.function)}' is not compatible with type '${column.type}'`,
         0,
