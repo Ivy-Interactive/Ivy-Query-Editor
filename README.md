@@ -400,10 +400,10 @@ Contributions welcome! Please read [CONTRIBUTING.md](CONTRIBUTING.md) for guidel
 
 ## License
 
-MIT © [Your Name]
+MIT © Ivy Interactive AB
 
 ## Support
 
 - 📚 [Documentation](docs/)
-- 🐛 [Issue Tracker](https://github.com/yourusername/filter-query-editor/issues)
-- 💬 [Discussions](https://github.com/yourusername/filter-query-editor/discussions)
+- 🐛 [Issue Tracker](https://github.com/Ivy-Interactive/filter-query-editor/issues)
+- 💬 [Discussions](https://github.com/Ivy-Interactive/filter-query-editor/discussions)

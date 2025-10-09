@@ -32,10 +32,7 @@ export default defineConfig({
           react: 'React',
           'react-dom': 'ReactDOM',
         },
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name === 'style.css') return 'style.css';
-          return assetInfo.name || 'assets/[name][extname]';
-        },
+        assetFileNames: 'style.css', // Force all CSS to style.css
       },
     },
     cssCodeSplit: false,
