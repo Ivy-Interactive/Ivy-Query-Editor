@@ -262,8 +262,8 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements Filters
     if (ctx.GT()) return 'greaterThan';
     if (ctx.LT()) return 'lessThan';
     if (ctx.NEQ()) return 'equals'; // Will need to negate
-    if (ctx.GE()) return 'greaterThan'; // Will need special handling
-    if (ctx.LE()) return 'lessThan'; // Will need special handling
+    if (ctx.GE()) return 'greaterThanOrEqual';
+    if (ctx.LE()) return 'lessThanOrEqual';
 
     // Check word operators
     if (ctx.EQUALS()) return 'equals';
@@ -274,9 +274,15 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements Filters
       return 'equals'; // Will be negated
     }
     if (text.includes('greater')) {
+      if (text.includes('equal')) {
+        return 'greaterThanOrEqual';
+      }
       return 'greaterThan';
     }
     if (text.includes('less')) {
+      if (text.includes('equal')) {
+        return 'lessThanOrEqual';
+      }
       return 'lessThan';
     }
 

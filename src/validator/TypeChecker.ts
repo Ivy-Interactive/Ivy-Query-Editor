@@ -17,13 +17,13 @@ export function isOperatorCompatible(
       return ['equals', 'contains', 'startsWith', 'endsWith'].includes(operator);
 
     case 'number':
-      return ['equals', 'greaterThan', 'lessThan'].includes(operator);
+      return ['equals', 'greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual'].includes(operator);
 
     case 'boolean':
       return operator === 'equals';
 
     case 'date':
-      return ['equals', 'greaterThan', 'lessThan'].includes(operator);
+      return ['equals', 'greaterThan', 'lessThan', 'greaterThanOrEqual', 'lessThanOrEqual'].includes(operator);
 
     case 'enum':
       return operator === 'equals';
@@ -125,6 +125,8 @@ export function getOperatorDisplayName(operator: Condition['function']): string 
     equals: 'equals',
     greaterThan: 'greater than',
     lessThan: 'less than',
+    greaterThanOrEqual: 'greater than or equal',
+    lessThanOrEqual: 'less than or equal',
     contains: 'contains',
     startsWith: 'starts with',
     endsWith: 'ends with',

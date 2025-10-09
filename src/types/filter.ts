@@ -10,7 +10,7 @@ export interface Condition {
   /** The column identifier */
   column: string;
   /** The comparison or text operation function */
-  function: "equals" | "greaterThan" | "lessThan" | "contains" | "startsWith" | "endsWith" | "isBlank" | "isNotBlank";
+  function: "equals" | "greaterThan" | "lessThan" | "greaterThanOrEqual" | "lessThanOrEqual" | "contains" | "startsWith" | "endsWith" | "isBlank" | "isNotBlank";
   /** Arguments for the function (values to compare against) */
   args: unknown[];
 }

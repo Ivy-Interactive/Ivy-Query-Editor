@@ -159,6 +159,10 @@ export class ASTPrinter {
         return '>';
       case 'lessThan':
         return '<';
+      case 'greaterThanOrEqual':
+        return '>=';
+      case 'lessThanOrEqual':
+        return '<=';
       case 'contains':
         return 'contains';
       case 'startsWith':

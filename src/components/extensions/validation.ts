@@ -3,7 +3,7 @@
  * Provides real-time error highlighting and diagnostics
  */
 
-import { Extension } from '@codemirror/state';
+import { Extension, Range } from '@codemirror/state';
 import { EditorView, Decoration, DecorationSet, ViewPlugin, ViewUpdate } from '@codemirror/view';
 import { linter, Diagnostic } from '@codemirror/lint';
 import { ColumnDef } from '../../types/column';
@@ -98,7 +98,7 @@ class ValidationPlugin {
           title: error.message,
         },
       }).range(from, to);
-    }).filter(Boolean);
+    }).filter((d): d is Range<Decoration> => d !== null);
 
     return Decoration.set(decorations);
   }

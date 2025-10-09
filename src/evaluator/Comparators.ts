@@ -125,6 +125,90 @@ export const lessThan: OperatorFunction = (columnValue, args, columnType) => {
 };
 
 /**
+ * Greater than or equal operator - works for numbers and dates
+ */
+export const greaterThanOrEqual: OperatorFunction = (columnValue, args, columnType) => {
+  if (args.length === 0) return false;
+  const compareValue = args[0];
+
+  // Null/undefined always returns false
+  if (isNullish(columnValue) || isNullish(compareValue)) {
+    return false;
+  }
+
+  switch (columnType) {
+    case 'number':
+      if (typeof columnValue !== 'number' || typeof compareValue !== 'number') {
+        return false;
+      }
+      return columnValue >= compareValue;
+
+    case 'date':
+      // For dates, we expect ISO strings
+      if (typeof columnValue !== 'string' || typeof compareValue !== 'string') {
+        return false;
+      }
+      try {
+        const date1 = new Date(columnValue);
+        const date2 = new Date(compareValue);
+        // Check for valid dates
+        if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
+          return false;
+        }
+        return date1 >= date2;
+      } catch {
+        return false;
+      }
+
+    default:
+      // Operator not supported for this type
+      return false;
+  }
+};
+
+/**
+ * Less than or equal operator - works for numbers and dates
+ */
+export const lessThanOrEqual: OperatorFunction = (columnValue, args, columnType) => {
+  if (args.length === 0) return false;
+  const compareValue = args[0];
+
+  // Null/undefined always returns false
+  if (isNullish(columnValue) || isNullish(compareValue)) {
+    return false;
+  }
+
+  switch (columnType) {
+    case 'number':
+      if (typeof columnValue !== 'number' || typeof compareValue !== 'number') {
+        return false;
+      }
+      return columnValue <= compareValue;
+
+    case 'date':
+      // For dates, we expect ISO strings
+      if (typeof columnValue !== 'string' || typeof compareValue !== 'string') {
+        return false;
+      }
+      try {
+        const date1 = new Date(columnValue);
+        const date2 = new Date(compareValue);
+        // Check for valid dates
+        if (isNaN(date1.getTime()) || isNaN(date2.getTime())) {
+          return false;
+        }
+        return date1 <= date2;
+      } catch {
+        return false;
+      }
+
+    default:
+      // Operator not supported for this type
+      return false;
+  }
+};
+
+/**
  * Contains operator - case-sensitive substring match for strings
  */
 export const contains: OperatorFunction = (columnValue, args, columnType) => {
@@ -234,6 +318,8 @@ export const operators: Record<string, OperatorFunction> = {
   equals,
   greaterThan,
   lessThan,
+  greaterThanOrEqual,
+  lessThanOrEqual,
   contains,
   startsWith,
   endsWith,

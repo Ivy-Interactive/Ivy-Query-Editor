@@ -5,6 +5,9 @@
  * Provides parsing, validation, formatting, and evaluation for filter queries.
  */
 
+// Import styles
+import './styles.css';
+
 // Component exports
 export { QueryEditor } from './components/QueryEditor';
 export type { QueryEditorProps, QueryEditorChangeEvent } from './components/types';
