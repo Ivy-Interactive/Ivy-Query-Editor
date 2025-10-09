@@ -21,6 +21,11 @@
 npm install filter-query-editor react react-dom
 ```
 
+**Note:** Requires React 18+ or React 19+. If you already have React installed, just run:
+```bash
+npm install filter-query-editor
+```
+
 ## Quick Start
 
 ### React Component (Recommended)
