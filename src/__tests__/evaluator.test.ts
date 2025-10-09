@@ -9,13 +9,13 @@ import { ColumnDef } from '../types/column';
 
 // Test column definitions
 const testColumns: ColumnDef[] = [
-  { id: 'status', type: 'string' },
-  { id: 'price', type: 'number' },
-  { id: 'active', type: 'boolean' },
-  { id: 'createdAt', type: 'date' },
-  { id: 'category', type: 'enum', enumValues: ['electronics', 'clothing', 'food'] },
-  { id: 'name', type: 'string' },
-  { id: 'description', type: 'string' }
+  { name: 'status', type: 'string', width: 100 },
+  { name: 'price', type: 'number', width: 100 },
+  { name: 'active', type: 'boolean', width: 100 },
+  { name: 'createdAt', type: 'date', width: 100 },
+  { name: 'category', type: 'enum', width: 100 },
+  { name: 'name', type: 'string', width: 100 },
+  { name: 'description', type: 'string', width: 100 }
 ];
 
 describe('Filter Evaluator', () => {

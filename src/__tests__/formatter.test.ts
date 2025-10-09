@@ -8,11 +8,11 @@ import { ColumnDef } from '../types/column';
 
 // Test column definitions
 const testColumns: ColumnDef[] = [
-  { id: 'status', type: 'enum', enumValues: ['open', 'closed', 'pending'] },
-  { id: 'price', type: 'number' },
-  { id: 'name', type: 'string' },
-  { id: 'active', type: 'boolean' },
-  { id: 'createdAt', type: 'date' }
+  { name: 'status', type: 'enum', width: 100 },
+  { name: 'price', type: 'number', width: 100 },
+  { name: 'name', type: 'string', width: 100 },
+  { name: 'active', type: 'boolean', width: 100 },
+  { name: 'createdAt', type: 'date', width: 100 }
 ];
 
 describe('Query Formatter', () => {

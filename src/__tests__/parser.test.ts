@@ -8,12 +8,12 @@ import { ColumnDef } from '../types/column';
 
 // Test column definitions
 const testColumns: ColumnDef[] = [
-  { id: 'status', type: 'enum', enumValues: ['open', 'closed', 'pending'] },
-  { id: 'price', type: 'number' },
-  { id: 'name', type: 'string' },
-  { id: 'isActive', type: 'boolean' },
-  { id: 'createdAt', type: 'date' },
-  { id: 'description', type: 'string' }
+  { name: 'status', type: 'enum', width: 100 },
+  { name: 'price', type: 'number', width: 100 },
+  { name: 'name', type: 'string', width: 100 },
+  { name: 'isActive', type: 'boolean', width: 100 },
+  { name: 'createdAt', type: 'date', width: 100 },
+  { name: 'description', type: 'string', width: 100 }
 ];
 
 describe('QueryParser', () => {

@@ -10,13 +10,13 @@ import { ColumnDef, DataType } from "../../types/column";
 
 // Mock columns
 const columns: ColumnDef[] = [
-  { id: "status", name: "status", type: DataType.STRING },
-  { id: "priority", name: "priority", type: DataType.STRING },
-  { id: "assignee", name: "assignee", type: DataType.STRING },
-  { id: "count", name: "count", type: DataType.NUMBER },
-  { id: "score", name: "score", type: DataType.NUMBER },
-  { id: "active", name: "active", type: DataType.BOOLEAN },
-  { id: "completed", name: "completed", type: DataType.BOOLEAN },
+  { name: "status", type: DataType.STRING, width: 100 },
+  { name: "priority", type: DataType.STRING, width: 100 },
+  { name: "assignee", type: DataType.STRING, width: 100 },
+  { name: "count", type: DataType.NUMBER, width: 100 },
+  { name: "score", type: DataType.NUMBER, width: 100 },
+  { name: "active", type: DataType.BOOLEAN, width: 100 },
+  { name: "completed", type: DataType.BOOLEAN, width: 100 },
 ];
 
 // No CSS modules to mock anymore - using Tailwind classes
