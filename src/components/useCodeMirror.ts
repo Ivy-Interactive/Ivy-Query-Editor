@@ -174,12 +174,32 @@ export function useCodeMirror({
   // Handle external value changes
   useEffect(() => {
     if (view && view.state.doc.toString() !== value) {
+      // Save current cursor position
+      const cursorPos = view.state.selection.main.head;
+      const oldLength = view.state.doc.length;
+      const newLength = value.length;
+
+      // Calculate new cursor position (proportional mapping as fallback)
+      // If cursor was at end, keep it at end
+      // Otherwise, try to maintain relative position
+      let newCursorPos = cursorPos;
+      if (cursorPos === oldLength) {
+        newCursorPos = newLength;
+      } else if (oldLength > 0) {
+        const ratio = cursorPos / oldLength;
+        newCursorPos = Math.floor(ratio * newLength);
+      }
+
+      // Ensure cursor is within bounds
+      newCursorPos = Math.max(0, Math.min(newCursorPos, newLength));
+
       view.dispatch({
         changes: {
           from: 0,
           to: view.state.doc.length,
           insert: value,
         },
+        selection: { anchor: newCursorPos, head: newCursorPos },
       });
     }
   }, [value, view]);

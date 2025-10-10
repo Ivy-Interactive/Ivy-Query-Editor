@@ -6,13 +6,50 @@ import { ColumnType, ColumnDef } from '../types/column';
 import { Condition } from '../types/filter';
 
 /**
+ * Normalize .NET backend types to generic column types
+ */
+function normalizeColumnType(type: string): ColumnType {
+  const upperType = type.toUpperCase();
+
+  // Number types
+  if (['INT32', 'INT64', 'DOUBLE', 'DECIMAL', 'NUMBER'].includes(upperType)) {
+    return 'number';
+  }
+
+  // String types
+  if (['TEXT', 'STRING', 'ICON'].includes(upperType)) {
+    return 'string';
+  }
+
+  // Boolean type
+  if (upperType === 'BOOLEAN') {
+    return 'boolean';
+  }
+
+  // Date types
+  if (['DATE', 'DATETIME'].includes(upperType)) {
+    return 'date';
+  }
+
+  // If already a valid ColumnType, return as-is
+  if (['string', 'number', 'boolean', 'date', 'enum'].includes(type)) {
+    return type as ColumnType;
+  }
+
+  // Default to string for unknown types
+  return 'string';
+}
+
+/**
  * Check if an operator is compatible with a column type
  */
 export function isOperatorCompatible(
   columnType: ColumnType,
   operator: Condition['function']
 ): boolean {
-  switch (columnType) {
+  const normalizedType = normalizeColumnType(columnType);
+
+  switch (normalizedType) {
     case 'string':
       return ['equals', 'contains', 'startsWith', 'endsWith'].includes(operator);
 
@@ -40,8 +77,9 @@ export function isBlankOperatorCompatible(
   columnType: ColumnType,
   operator: 'isBlank' | 'isNotBlank'
 ): boolean {
+  const normalizedType = normalizeColumnType(columnType);
   // Blank operators can be used with string, date, and potentially other nullable types
-  return ['string', 'date', 'enum'].includes(columnType);
+  return ['string', 'date', 'enum'].includes(normalizedType);
 }
 
 /**
@@ -51,9 +89,9 @@ export function validateValueType(
   value: unknown,
   column: ColumnDef
 ): { valid: boolean; error?: string } {
-  const { type } = column;
+  const normalizedType = normalizeColumnType(column.type);
 
-  switch (type) {
+  switch (normalizedType) {
     case 'string':
       if (typeof value !== 'string') {
         return {
@@ -88,12 +126,12 @@ export function validateValueType(
           error: `Expected date string for column '${column.name}', got ${typeof value}`
         };
       }
-      // Basic ISO date format check
-      const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+      // Basic ISO date/datetime format check - allow both YYYY-MM-DD and ISO datetime
+      const datePattern = /^\d{4}-\d{2}-\d{2}(T\d{2}:\d{2}:\d{2}(\.\d{3})?Z?)?$/;
       if (!datePattern.test(value)) {
         return {
           valid: false,
-          error: `Invalid date format for column '${column.name}'. Expected YYYY-MM-DD`
+          error: `Invalid date format for column '${column.name}'. Expected YYYY-MM-DD or ISO datetime`
         };
       }
       break;

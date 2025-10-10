@@ -43,11 +43,17 @@ function createColumnCompletions(columns: ColumnDef[], context: CompletionContex
   const bracketMatch = textBefore.match(/\[(\w*)$/);
   const from = bracketMatch ? context.pos - bracketMatch[1].length : context.pos;
 
+  // Check if there's already a closing bracket after the cursor
+  const line = context.state.doc.lineAt(context.pos);
+  const textAfterCursor = line.text.slice(context.pos - line.from);
+  const hasClosingBracket = textAfterCursor.startsWith(']');
+
   return columns.map(col => ({
     label: col.name,
     type: 'variable',
     detail: col.type,
-    apply: `${col.name}]`,
+    // Only add closing bracket if one doesn't already exist
+    apply: hasClosingBracket ? col.name : `${col.name}]`,
     boost: 1,
   }));
 }

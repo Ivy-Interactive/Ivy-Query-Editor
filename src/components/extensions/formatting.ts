@@ -9,7 +9,42 @@ import { ColumnDef } from '../../types/column';
 import { formatQueryString } from '../../formatter/QueryFormatter';
 
 /**
+ * Calculate minimal changes between old and new text
+ * This helps CodeMirror's cursor mapping work correctly
+ */
+function calculateChanges(oldText: string, newText: string) {
+  // If texts are identical, no changes needed
+  if (oldText === newText) {
+    return [];
+  }
+
+  // Find common prefix
+  let prefixLen = 0;
+  const minLen = Math.min(oldText.length, newText.length);
+  while (prefixLen < minLen && oldText[prefixLen] === newText[prefixLen]) {
+    prefixLen++;
+  }
+
+  // Find common suffix
+  let suffixLen = 0;
+  while (
+    suffixLen < minLen - prefixLen &&
+    oldText[oldText.length - 1 - suffixLen] === newText[newText.length - 1 - suffixLen]
+  ) {
+    suffixLen++;
+  }
+
+  // Calculate the changed region
+  const from = prefixLen;
+  const to = oldText.length - suffixLen;
+  const insert = newText.slice(prefixLen, newText.length - suffixLen);
+
+  return [{ from, to, insert }];
+}
+
+/**
  * Format the current document
+ * Preserves cursor position by calculating minimal changes
  */
 function formatDocument(view: EditorView, columns: ColumnDef[]): boolean {
   const text = view.state.doc.toString();
@@ -25,12 +60,17 @@ function formatDocument(view: EditorView, columns: ColumnDef[]): boolean {
 
     // Only update if the text changed
     if (formatted !== text) {
+      // Get current cursor position
+      const cursorPos = view.state.selection.main.head;
+
+      // Calculate minimal changes instead of replacing entire document
+      const changes = calculateChanges(text, formatted);
+
+      // Dispatch changes - CodeMirror will automatically map the selection
       view.dispatch({
-        changes: {
-          from: 0,
-          to: view.state.doc.length,
-          insert: formatted,
-        },
+        changes,
+        // Selection will be automatically mapped through changes
+        // No need to explicitly set it
       });
     }
 
