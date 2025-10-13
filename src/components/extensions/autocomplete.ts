@@ -48,14 +48,27 @@ function createColumnCompletions(columns: ColumnDef[], context: CompletionContex
   const textAfterCursor = line.text.slice(context.pos - line.from);
   const hasClosingBracket = textAfterCursor.startsWith(']');
 
-  return columns.map(col => ({
-    label: col.name,
-    type: 'variable',
-    detail: col.type,
-    // Only add closing bracket if one doesn't already exist
-    apply: hasClosingBracket ? col.name : `${col.name}]`,
-    boost: 1,
-  }));
+  return columns.map(col => {
+    const insertText = hasClosingBracket ? col.name : `${col.name}]`;
+
+    return {
+      label: col.name,
+      type: 'variable',
+      detail: col.type,
+      // Use a function to control cursor position after insertion
+      apply: (view, completion, from, to) => {
+        const cursorPos = hasClosingBracket
+          ? from + insertText.length + 1  // Skip past the existing ]
+          : from + insertText.length;      // Already includes the ]
+
+        view.dispatch({
+          changes: { from, to, insert: insertText },
+          selection: { anchor: cursorPos },
+        });
+      },
+      boost: 1,
+    };
+  });
 }
 
 /**
@@ -250,5 +263,6 @@ export function createAutocompleteExtension(columns: ColumnDef[]): Extension {
     activateOnTyping: true,
     maxRenderedOptions: 20,
     closeOnBlur: true,
+    icons: false,
   });
 }

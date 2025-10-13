@@ -197,7 +197,14 @@ export class ASTBuilder extends AbstractParseTreeVisitor<any> implements Filters
       args: [value]
     };
 
-    return { condition };
+    // Check if this is a negated operator (!=, not equals)
+    const shouldNegate = compOp.NEQ() !== null ||
+                         compOp.getText().toLowerCase().includes('notequal');
+
+    return {
+      condition,
+      negate: shouldNegate || undefined
+    };
   }
 
   /**
