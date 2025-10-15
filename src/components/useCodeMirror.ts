@@ -2,23 +2,24 @@
  * Custom hook for managing CodeMirror 6 lifecycle in React
  */
 
-import { useEffect, useRef, useState } from 'react';
-import { EditorState, Extension } from '@codemirror/state';
-import { EditorView, keymap, ViewUpdate } from '@codemirror/view';
-import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
-import { ColumnDef } from '../types/column';
-import { createBaseExtensions } from './extensions/base';
-import { createHighlightingExtension } from './extensions/highlighting';
-import { createValidationExtension } from './extensions/validation';
-import { createFormattingExtension } from './extensions/formatting';
-import { createAutocompleteExtension } from './extensions/autocomplete';
+import { useEffect, useRef, useState } from "react";
+import { EditorState, Extension } from "@codemirror/state";
+import { EditorView, keymap, ViewUpdate } from "@codemirror/view";
+import { defaultKeymap, history, historyKeymap } from "@codemirror/commands";
+import { startCompletion } from "@codemirror/autocomplete";
+import { ColumnDef } from "../types/column";
+import { createBaseExtensions } from "./extensions/base";
+import { createHighlightingExtension } from "./extensions/highlighting";
+import { createValidationExtension } from "./extensions/validation";
+import { createFormattingExtension } from "./extensions/formatting";
+import { createAutocompleteExtension } from "./extensions/autocomplete";
 
 interface UseCodeMirrorOptions {
   container: HTMLElement | null;
   value: string;
   columns: ColumnDef[];
   onChange?: (text: string) => void;
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
   readOnly?: boolean;
   placeholder?: string;
   autoFocus?: boolean;
@@ -32,7 +33,7 @@ export function useCodeMirror({
   value,
   columns,
   onChange,
-  theme = 'light',
+  theme = "light",
   readOnly = false,
   placeholder,
   autoFocus = false,
@@ -54,10 +55,7 @@ export function useCodeMirror({
     const extensions: Extension[] = [
       // Basic setup
       history(),
-      keymap.of([
-        ...defaultKeymap,
-        ...historyKeymap,
-      ]),
+      keymap.of([...defaultKeymap, ...historyKeymap]),
       EditorView.editable.of(!readOnly),
 
       // Base extensions (placeholder, etc.)
@@ -81,61 +79,70 @@ export function useCodeMirror({
           const text = update.state.doc.toString();
           onChangeRef.current(text);
         }
+
+        // Trigger autocomplete on focus
+        if (update.focusChanged && update.view.hasFocus) {
+          // Use setTimeout to ensure focus is complete before triggering
+          setTimeout(() => {
+            startCompletion(update.view);
+          }, 10);
+        }
       }),
 
       // Prevent line breaks - make it single line
-      EditorState.transactionFilter.of(tr => {
+      EditorState.transactionFilter.of((tr) => {
         if (!tr.docChanged) return tr;
 
         let text = tr.newDoc.toString();
-        if (text.includes('\n')) {
+        if (text.includes("\n")) {
           // Remove all line breaks
-          text = text.replace(/\n/g, ' ');
-          return [{
-            changes: {
-              from: 0,
-              to: tr.newDoc.length,
-              insert: text
+          text = text.replace(/\n/g, " ");
+          return [
+            {
+              changes: {
+                from: 0,
+                to: tr.newDoc.length,
+                insert: text,
+              },
+              selection: tr.selection,
             },
-            selection: tr.selection
-          }];
+          ];
         }
         return tr;
       }),
 
       // Theme
       EditorView.theme({
-        '&': {
-          fontSize: '14px',
+        "&": {
+          fontSize: "12px",
           fontFamily: '"Monaco", "Consolas", "Courier New", monospace',
         },
-        '.cm-editor': {
-          borderRadius: '4px',
-          height: '100%',
+        ".cm-editor": {
+          borderRadius: "4px",
+          height: "100%",
         },
-        '.cm-editor.cm-focused': {
-          outline: 'none',
+        ".cm-editor.cm-focused": {
+          outline: "none",
         },
-        '.cm-content': {
-          padding: '12px 16px',
-          minHeight: 'auto',
-          cursor: 'text',
+        ".cm-content": {
+          padding: "16px 16px",
+          minHeight: "auto",
+          cursor: "text",
         },
-        '.cm-line': {
-          padding: '0 2px',
+        ".cm-line": {
+          padding: "0",
         },
-        '.cm-placeholder': {
-          color: '#999999',
-          fontStyle: 'italic',
+        ".cm-placeholder": {
+          color: "#999999",
         },
-        '.cm-scroller': {
-          fontFamily: 'inherit',
-          overflow: 'hidden',
+        ".cm-scroller": {
+          fontFamily: "inherit",
+          overflow: "hidden",
         },
       }),
 
       // Additional theme-specific styles
-      EditorView.theme({}, { dark: theme === 'dark' }),
+      EditorView.theme({}, { dark: theme === "dark" }),
     ];
 
     // Create editor state
@@ -156,7 +163,7 @@ export function useCodeMirror({
     }
 
     // Make the editor focusable and clickable
-    container.addEventListener('click', () => {
+    container.addEventListener("click", () => {
       editorView.focus();
     });
 

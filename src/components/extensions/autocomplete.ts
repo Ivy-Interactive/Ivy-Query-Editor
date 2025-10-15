@@ -8,6 +8,30 @@ import { autocompletion, CompletionContext, CompletionResult, Completion } from 
 import { ColumnDef } from '../../types/column';
 
 /**
+ * Format technical type names to user-friendly labels
+ */
+function formatTypeForDisplay(type: string): string {
+  const typeMap: Record<string, string> = {
+    'Utf8': 'Text',
+    'string': 'Text',
+    'Int32': 'Number',
+    'Int64': 'Number',
+    'Float32': 'Number',
+    'Float64': 'Number',
+    'number': 'Number',
+    'Boolean': 'True/False',
+    'boolean': 'True/False',
+    'Date': 'Date',
+    'date': 'Date',
+    'Timestamp': 'Date',
+    'Enum': 'Option',
+    'enum': 'Option',
+  };
+
+  return typeMap[type] || type.charAt(0).toUpperCase() + type.slice(1);
+}
+
+/**
  * Get the text before the cursor up to the start of a word or token
  */
 function getTextBeforeCursor(context: CompletionContext): string {
@@ -54,7 +78,7 @@ function createColumnCompletions(columns: ColumnDef[], context: CompletionContex
     return {
       label: col.name,
       type: 'variable',
-      detail: col.type,
+      detail: formatTypeForDisplay(col.type),
       // Use a function to control cursor position after insertion
       apply: (view, completion, from, to) => {
         const cursorPos = hasClosingBracket
@@ -72,6 +96,25 @@ function createColumnCompletions(columns: ColumnDef[], context: CompletionContex
 }
 
 /**
+ * Normalize column type to standard types
+ */
+function normalizeColumnType(type: string): string {
+  const typeMap: Record<string, string> = {
+    'Utf8': 'string',
+    'Int32': 'number',
+    'Int64': 'number',
+    'Float32': 'number',
+    'Float64': 'number',
+    'Boolean': 'boolean',
+    'Date': 'date',
+    'Timestamp': 'date',
+    'Enum': 'enum',
+  };
+
+  return typeMap[type] || type.toLowerCase();
+}
+
+/**
  * Create operator completions based on column type
  */
 function createOperatorCompletions(columns: ColumnDef[], textBefore: string): Completion[] {
@@ -85,8 +128,11 @@ function createOperatorCompletions(columns: ColumnDef[], textBefore: string): Co
 
   const operators: Completion[] = [];
 
+  // Normalize the column type
+  const normalizedType = normalizeColumnType(column.type);
+
   // Add operators based on column type
-  switch (column.type) {
+  switch (normalizedType) {
     case 'string':
       operators.push(
         { label: 'equals', type: 'keyword', apply: 'equals ', boost: 10 },
@@ -198,6 +244,22 @@ function createLogicalCompletions(): Completion[] {
 function completeQuery(columns: ColumnDef[]) {
   return (context: CompletionContext): CompletionResult | null => {
     const textBefore = getTextBeforeCursor(context);
+
+    // Show column suggestions at the start or when empty
+    if (textBefore.trim() === '' || context.pos === 0) {
+      const columnSuggestions = columns.map(col => ({
+        label: col.name,
+        type: 'variable' as const,
+        detail: formatTypeForDisplay(col.type),
+        apply: `[${col.name}] `,
+        boost: 100,
+      }));
+
+      return {
+        from: context.pos,
+        options: columnSuggestions,
+      };
+    }
 
     // Column name completion
     if (isInColumnContext(textBefore)) {

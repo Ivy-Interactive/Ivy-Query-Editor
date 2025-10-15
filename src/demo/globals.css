@@ -69,7 +69,7 @@
   }
 
   .cm-editor-container .cm-content {
-    @apply px-4 py-3 font-mono text-sm cursor-text;
+    @apply px-4 py-[14px] font-mono text-xs cursor-text;
     min-height: auto;
   }
 

@@ -98,9 +98,6 @@ export function createHighlightingExtension(theme: 'light' | 'dark' = 'light'): 
       '.cm-query-keyword': {
         fontWeight: '600',
       },
-      '.cm-query-string': {
-        fontStyle: 'italic',
-      },
       '.cm-query-operator': {
         fontWeight: '500',
       },
