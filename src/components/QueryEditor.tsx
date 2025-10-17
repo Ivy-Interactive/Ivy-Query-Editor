@@ -193,6 +193,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
       )}
       style={{ height: heightStyle }}
       data-theme={theme}
+      data-gramm="false"
       onClick={handleContainerClick}
       tabIndex={readOnly ? undefined : 0}
     />
