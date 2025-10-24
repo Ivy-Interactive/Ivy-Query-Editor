@@ -5,12 +5,13 @@
  */
 
 import React, { useEffect, useRef, useCallback, useState } from "react";
-import { Filter, X } from "lucide-react";
+import { Filter } from "lucide-react";
 import { QueryEditorProps, QueryEditorChangeEvent } from "./types";
 import { useCodeMirror } from "./useCodeMirror";
 import { parseQuery } from "../parser/QueryParser";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
 /**
  * QueryEditor component - A CodeMirror-based editor for filter queries
@@ -42,7 +43,13 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   autoFocus = false,
   isCollapsed = false,
   onToggle,
-  slideDirection = "right",
+  dropdownSide = "left",
+  popoverTitle = "Filter Query",
+  clearButtonText = "Clear",
+  showPopoverTitle = true,
+  buttonText = "Filters",
+  showButtonText = false,
+  editorClassName = "",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
@@ -100,19 +107,22 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   }, [view, readOnly]);
 
   // Handle clear button click
-  const handleClear = useCallback((e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent triggering container click
-    if (view && !readOnly) {
-      view.dispatch({
-        changes: {
-          from: 0,
-          to: view.state.doc.length,
-          insert: "",
-        },
-      });
-      view.focus();
-    }
-  }, [view, readOnly]);
+  const handleClear = useCallback(
+    (e: React.MouseEvent) => {
+      e.stopPropagation(); // Prevent triggering container click
+      if (view && !readOnly) {
+        view.dispatch({
+          changes: {
+            from: 0,
+            to: view.state.doc.length,
+            insert: "",
+          },
+        });
+        view.focus();
+      }
+    },
+    [view, readOnly]
+  );
 
   // Update value when prop changes
   // NOTE: This is handled in useCodeMirror hook, but keeping for backward compatibility
@@ -146,118 +156,42 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
     }
   }, [value, view]);
 
-  // Insert clear button into CodeMirror scroller
-  useEffect(() => {
-    if (!containerRef.current || readOnly) return;
-
-    // Find the .cm-scroller element
-    const cmScroller = containerRef.current.querySelector('.cm-scroller');
-    if (!cmScroller) return;
-
-    // Check if button already exists
-    let clearBtn = cmScroller.querySelector('.clear-button') as HTMLButtonElement;
-
-    if (value && value.length > 0) {
-      if (!clearBtn) {
-        // Create button
-        clearBtn = document.createElement('button');
-        clearBtn.className = 'clear-button';
-        clearBtn.setAttribute('aria-label', 'Clear query');
-        clearBtn.setAttribute('type', 'button');
-        clearBtn.style.cssText = 'position: absolute; right: 12px; top: 0; bottom: 0; margin: auto; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; padding: 4px; background: transparent; border: none; border-radius: 4px; color: #64748b; cursor: pointer; z-index: 10; pointer-events: auto;';
-        clearBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: block; width: 20px; height: 20px; flex-shrink: 0;"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>';
-        clearBtn.onclick = (e) => {
-          e.stopPropagation();
-          handleClear(e as any);
-        };
-        cmScroller.appendChild(clearBtn);
-      }
-    } else if (clearBtn) {
-      // Remove button when value is empty
-      clearBtn.remove();
-    }
-  }, [value, readOnly, handleClear, view]);
-
-  // Handle toggle button click
-  const handleToggle = useCallback(() => {
-    onToggle?.(!isCollapsed);
-  }, [isCollapsed, onToggle]);
-
-  // Compute height style
-  const heightStyle = typeof height === "number" ? `${height}px` : height;
-
-  // Dynamic border radius based on slide direction and collapsed state
-  const getEditorBorderRadius = () => {
-    if (isCollapsed) {
-      return "rounded-lg"; // All corners rounded when collapsed
-    }
-    if (slideDirection === "right") {
-      return "rounded-r-lg rounded-l-none"; // Button on left, so no left corners on editor
-    }
-    return "rounded-l-lg rounded-r-none"; // Button on right, so no right corners on editor
-  };
-
-  const getEditorBorderClasses = () => {
-    if (isCollapsed) {
-      return "border"; // All borders when collapsed
-    }
-    if (slideDirection === "right") {
-      return "border-t border-r border-b border-l-0"; // Button on left, so no left border
-    }
-    return "border-t border-l border-b border-r-0"; // Button on right, so no right border
-  };
-
-  const getButtonBorderRadius = () => {
-    if (isCollapsed) {
-      return "rounded-md"; // All corners rounded when collapsed
-    }
-    if (slideDirection === "right") {
-      return "rounded-r-none rounded-l-md"; // Button on left, so no right corners to connect with editor
-    }
-    return "rounded-l-none rounded-r-md"; // Button on right, so no left corners to connect with editor
-  };
-
-  const getButtonBorderClasses = () => {
-    if (isCollapsed) {
-      return "border"; // All borders when collapsed
-    }
-    if (slideDirection === "right") {
-      return "border-t border-l border-b border-r-0"; // Button on left, so no right border to connect
-    }
-    return "border-t border-r border-b border-l-0"; // Button on right, so no left border to connect
-  };
-
   return (
-    <div className={cn("relative flex items-start", className)}>
-      {/* Toggle Button */}
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={handleToggle}
-        className={cn(
-          "z-10 shrink-0 px-0",
-          getButtonBorderRadius(),
-          getButtonBorderClasses(),
-          slideDirection === "right" ? "order-1 ml-2" : "order-2 mr-2"
-        )}
-        style={{ height: heightStyle, width: heightStyle }}
-        aria-label={isCollapsed ? "Open filter editor" : "Close filter editor"}
-      >
-        {isCollapsed ? (
+    <Popover open={!isCollapsed} onOpenChange={(open) => onToggle?.(!open)}>
+      <PopoverTrigger asChild>
+        <Button
+          variant="outline"
+          size={showButtonText ? "default" : "icon"}
+          className={cn("shrink-0", showButtonText && "gap-2", className)}
+          aria-label="Open filter editor"
+        >
           <Filter className="h-4 w-4" />
-        ) : (
-          <X className="h-4 w-4" />
-        )}
-      </Button>
-
-      {/* Sliding Panel */}
-      <div
-        className={cn(
-          "transition-all duration-300 ease-in-out overflow-hidden",
-          slideDirection === "right" ? "order-2" : "order-1",
-          isCollapsed ? "w-0 opacity-0" : "w-full opacity-100"
-        )}
+          {showButtonText && <span>{buttonText}</span>}
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent
+        side={dropdownSide}
+        align="start"
+        className="w-[600px] p-3"
+        sideOffset={8}
       >
+        {(showPopoverTitle || (value && value.length > 0)) && (
+          <div className="flex items-center justify-between mb-2">
+            {showPopoverTitle && (
+              <span className="text-sm font-medium">{popoverTitle}</span>
+            )}
+            {value && value.length > 0 && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClear}
+                className="h-7 text-xs ml-auto"
+              >
+                {clearButtonText}
+              </Button>
+            )}
+          </div>
+        )}
         <div
           ref={(el) => {
             // Use type assertion to handle ref callback
@@ -269,21 +203,20 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
             }
           }}
           className={cn(
-            getEditorBorderRadius(),
-            getEditorBorderClasses(),
-            "bg-background text-foreground relative",
-            "transition-all duration-200 cursor-text",
-            "focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-background",
-            "cm-editor-container" // For targeting CodeMirror styles
+            "rounded-md border",
+            "cm-editor-container", // For targeting CodeMirror styles
+            editorClassName // Custom styles from user
           )}
-          style={{ height: heightStyle }}
+          style={{
+            height: typeof height === "number" ? `${height}px` : height,
+          }}
           data-theme={theme}
           data-gramm="false"
           onClick={handleContainerClick}
           tabIndex={readOnly ? undefined : 0}
         />
-      </div>
-    </div>
+      </PopoverContent>
+    </Popover>
   );
 };
 

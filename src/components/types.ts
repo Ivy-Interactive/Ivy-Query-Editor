@@ -43,8 +43,26 @@ export interface QueryEditorProps {
   /** Callback when toggle button is clicked */
   onToggle?: (collapsed: boolean) => void;
 
-  /** Direction the editor slides from when expanding */
-  slideDirection?: 'left' | 'right';
+  /** Side where the dropdown opens relative to the button */
+  dropdownSide?: 'left' | 'right' | 'top' | 'bottom';
+
+  /** Title text shown in the popover header */
+  popoverTitle?: string;
+
+  /** Text for the clear button */
+  clearButtonText?: string;
+
+  /** Show or hide the popover title */
+  showPopoverTitle?: boolean;
+
+  /** Text to display next to the filter button icon */
+  buttonText?: string;
+
+  /** Show or hide the button text */
+  showButtonText?: boolean;
+
+  /** Custom CSS class name for the editor container (CodeMirror) */
+  editorClassName?: string;
 }
 
 /**
