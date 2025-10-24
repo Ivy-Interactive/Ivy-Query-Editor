@@ -17,6 +17,7 @@ import { useCodeMirror } from "./useCodeMirror";
 import { parseQuery } from "../parser/QueryParser";
 import { cn } from "../lib/utils";
 import { Button } from "./ui/button";
+import { Switch } from "./ui/switch";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
   Tooltip,
@@ -61,7 +62,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   showPopoverTitle = true,
   buttonText = "Filters",
   showButtonText = false,
-  editorClassName = "",
+  customStyling = "",
   queries = [],
   onQuerySelect,
   statusState = "waiting",
@@ -72,6 +73,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   onLLMFilteringChange,
   aiIconColor = "rgb(139, 92, 246)",
   aiToggleLabel = "AI",
+  popoverWidth = "600px",
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
@@ -250,7 +252,8 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
       <PopoverContent
         side={dropdownSide}
         align="start"
-        className="w-[600px] p-4"
+        className="p-4"
+        style={{ width: typeof popoverWidth === 'number' ? `${popoverWidth}px` : popoverWidth }}
         sideOffset={8}
       >
         <div className="flex flex-col gap-2 justify-content-start">
@@ -264,21 +267,11 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
               <span className="text-xs text-muted-foreground">
                 {aiToggleLabel}
               </span>
-              <button
-                onClick={handleToggleLLMFiltering}
-                className={cn(
-                  "relative inline-flex h-4 w-8 items-center rounded-full transition-colors",
-                  llmFilteringEnabled ? "bg-primary" : "bg-muted",
-                  llmFilteringEnabled && "ai-toggle-glow"
-                )}
-              >
-                <span
-                  className={cn(
-                    "inline-block h-3 w-3 transform rounded-full bg-background transition-transform shadow-sm",
-                    llmFilteringEnabled ? "translate-x-4" : "translate-x-0.5"
-                  )}
-                />
-              </button>
+              <Switch
+                checked={llmFilteringEnabled}
+                onCheckedChange={handleToggleLLMFiltering}
+                className={cn(llmFilteringEnabled && "ai-toggle-glow")}
+              />
             </div>
           </div>
 
@@ -302,10 +295,10 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
                 className={cn(
                   "rounded-md border flex-1",
                   "cm-editor-container", // For targeting CodeMirror styles
-                  statusState === "ai" && "ai-animated-border-inner",
-                  editorClassName // Custom styles from user
+                  statusState === "ai" && "ai-animated-border-inner"
                 )}
                 style={{
+                  ...(typeof customStyling === "object" ? customStyling : {}), // Custom styles from user
                   height: typeof height === "number" ? `${height}px` : height,
                 }}
                 data-theme={theme}
@@ -357,7 +350,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
 
         {/* Queries List */}
         {queries && queries.length > 0 && (
-          <div className="mt-3 space-y-1">
+          <div className="mt-2 space-y-1">
             <span className="text-xs font-medium text-muted-foreground">
               Recent Queries
             </span>

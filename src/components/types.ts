@@ -2,9 +2,9 @@
  * Type definitions for the QueryEditor component
  */
 
-import { FilterGroup } from '../types/filter';
-import { ColumnDef } from '../types/column';
-import { ParseError } from '../types/parser';
+import { FilterGroup } from "../types/filter";
+import { ColumnDef } from "../types/column";
+import { ParseError } from "../types/parser";
 
 /**
  * Props for the QueryEditor component
@@ -20,7 +20,7 @@ export interface QueryEditorProps {
   onChange?: (event: QueryEditorChangeEvent) => void;
 
   /** Editor theme */
-  theme?: 'light' | 'dark';
+  theme?: "light" | "dark";
 
   /** Read-only mode */
   readOnly?: boolean;
@@ -44,7 +44,7 @@ export interface QueryEditorProps {
   onToggle?: (collapsed: boolean) => void;
 
   /** Side where the dropdown opens relative to the button */
-  dropdownSide?: 'left' | 'right' | 'top' | 'bottom';
+  dropdownSide?: "left" | "right" | "top" | "bottom";
 
   /** Title text shown in the popover header */
   popoverTitle?: string;
@@ -62,7 +62,7 @@ export interface QueryEditorProps {
   showButtonText?: boolean;
 
   /** Custom CSS class name for the editor container (CodeMirror) */
-  editorClassName?: string;
+  customStyling?: string;
 
   /** List of saved/recent queries to display below the editor */
   queries?: string[];
@@ -71,7 +71,7 @@ export interface QueryEditorProps {
   onQuerySelect?: (query: string) => void;
 
   /** Current status state for the status icon */
-  statusState?: 'waiting' | 'ai' | 'query' | 'error';
+  statusState?: "waiting" | "ai" | "query" | "error";
 
   /** Custom tooltip text for the status icon */
   statusTooltip?: string;
@@ -93,6 +93,9 @@ export interface QueryEditorProps {
 
   /** Label text for the AI filtering toggle (default: "AI") */
   aiToggleLabel?: string;
+
+  /** Width of the popover (default: "600px") */
+  popoverWidth?: string | number;
 }
 
 /**
