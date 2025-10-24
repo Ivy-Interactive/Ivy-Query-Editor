@@ -11,6 +11,7 @@ import {
   Sparkles,
   SpellCheck,
   SpellCheck2,
+  Loader2,
 } from "lucide-react";
 import { QueryEditorProps, QueryEditorChangeEvent } from "./types";
 import { useCodeMirror } from "./useCodeMirror";
@@ -74,6 +75,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   aiIconColor = "rgb(139, 92, 246)",
   aiToggleLabel = "AI",
   popoverWidth = "600px",
+  isLoading = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
@@ -96,6 +98,15 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   // Get status icon and tooltip based on state
   const getStatusConfig = () => {
     const iconClass = "h-5 w-5";
+
+    // If loading, show spinner regardless of status state
+    if (isLoading) {
+      return {
+        icon: <Loader2 className={cn(iconClass, "animate-spin")} />,
+        tooltip: statusTooltip || "Loading...",
+      };
+    }
+
     switch (statusState) {
       case "ai":
         return {

@@ -96,6 +96,9 @@ export interface QueryEditorProps {
 
   /** Width of the popover (default: "600px") */
   popoverWidth?: string | number;
+
+  /** Show loading spinner on status icon */
+  isLoading?: boolean;
 }
 
 /**
