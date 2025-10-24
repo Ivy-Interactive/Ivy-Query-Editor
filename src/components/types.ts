@@ -36,6 +36,15 @@ export interface QueryEditorProps {
 
   /** Auto-focus on mount */
   autoFocus?: boolean;
+
+  /** Whether the editor is collapsed */
+  isCollapsed?: boolean;
+
+  /** Callback when toggle button is clicked */
+  onToggle?: (collapsed: boolean) => void;
+
+  /** Direction the editor slides from when expanding */
+  slideDirection?: 'left' | 'right';
 }
 
 /**
