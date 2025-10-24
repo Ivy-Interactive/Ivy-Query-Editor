@@ -32,11 +32,20 @@ function App() {
   const [errors, setErrors] = useState<any[]>([]);
   const [parsedFilter, setParsedFilter] = useState<any>(null);
   const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+  const [allowLLMFiltering, setAllowLLMFiltering] = useState<boolean>(true);
+  const [statusState, setStatusState] = useState<
+    "waiting" | "ai" | "query" | "error"
+  >("waiting");
+
+  const handleApply = () => {
+    console.log("Filter applied:", query);
+    alert(`Filter applied: ${query}`);
+  };
 
   // Sample queries list
   const recentQueries = [
     '[status] = "open" AND [priority] = "high"',
-    '[active] = true',
+    "[active] = true",
     '[category] = "urgent" OR [category] = "critical"',
     '[created_at] > "2024-01-01"',
   ];
@@ -45,10 +54,19 @@ function App() {
     setQuery(event.text);
     setErrors(event.errors || []);
 
-    // Parse on every change if valid
-    if (event.isValid && event.filters) {
+    // Update status based on validity
+    if (event.text.length === 0) {
+      setStatusState("waiting");
+    } else if (event.isValid && event.filters) {
+      setStatusState("query");
       setParsedFilter(event.filters);
     } else if (!event.isValid) {
+      // Show error state if LLM filtering is disabled, otherwise show AI state
+      if (!allowLLMFiltering) {
+        setStatusState("error");
+      } else {
+        setStatusState("ai");
+      }
       setParsedFilter(null);
     }
   };
@@ -60,6 +78,21 @@ function App() {
       setParsedFilter(result.filters);
     }
   }, []);
+
+  // Update status when allowLLMFiltering changes
+  useEffect(() => {
+    if (query.length > 0) {
+      const result = parseQuery(query, columns);
+      if (!result.filters || (result.errors && result.errors.length > 0)) {
+        // Query is invalid
+        if (!allowLLMFiltering) {
+          setStatusState("error");
+        } else {
+          setStatusState("ai");
+        }
+      }
+    }
+  }, [allowLLMFiltering, query, columns]);
 
   return (
     <div className="min-h-screen bg-background p-8">
@@ -80,6 +113,11 @@ function App() {
             onToggle={setIsCollapsed}
             queries={recentQueries}
             onQuerySelect={setQuery}
+            statusState={statusState}
+            onApply={handleApply}
+            allowLLMFiltering={allowLLMFiltering}
+            onLLMFilteringChange={setAllowLLMFiltering}
+            aiToggleLabel={"AI Filtering"}
           />
         </div>
 

@@ -69,6 +69,30 @@ export interface QueryEditorProps {
 
   /** Callback when a query from the list is clicked */
   onQuerySelect?: (query: string) => void;
+
+  /** Current status state for the status icon */
+  statusState?: 'waiting' | 'ai' | 'query' | 'error';
+
+  /** Custom tooltip text for the status icon */
+  statusTooltip?: string;
+
+  /** Text for the apply button */
+  applyButtonText?: string;
+
+  /** Callback when apply button is clicked */
+  onApply?: () => void;
+
+  /** Allow LLM filtering - when false and query is invalid, shows error state */
+  allowLLMFiltering?: boolean;
+
+  /** Callback when LLM filtering is toggled */
+  onLLMFilteringChange?: (enabled: boolean) => void;
+
+  /** Color for the AI status icon (default: purple) */
+  aiIconColor?: string;
+
+  /** Label text for the AI filtering toggle (default: "AI") */
+  aiToggleLabel?: string;
 }
 
 /**
