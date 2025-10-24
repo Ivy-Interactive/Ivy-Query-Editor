@@ -20,11 +20,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Ivy-Interactive/filter-query-editor.git"
+    "url": "https://github.com/Ivy-Interactive/Ivy-Query-Editor.git"
   },
-  "homepage": "https://github.com/Ivy-Interactive/filter-query-editor#readme",
+  "homepage": "https://github.com/Ivy-Interactive/Ivy-Query-Editor#readme",
   "bugs": {
-    "url": "https://github.com/Ivy-Interactive/filter-query-editor/issues"
+    "url": "https://github.com/Ivy-Interactive/Ivy-Query-Editor/issues"
   },
   "scripts": {
     "dev": "vite",
