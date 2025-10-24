@@ -31,9 +31,15 @@ function App() {
   );
   const [errors, setErrors] = useState<any[]>([]);
   const [parsedFilter, setParsedFilter] = useState<any>(null);
-  const queryEditorRef = useRef<HTMLDivElement>(null);
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [slideDirection, setSlideDirection] = useState<'left' | 'right'>('right');
+  const [isCollapsed, setIsCollapsed] = useState<boolean>(true);
+
+  // Sample queries list
+  const recentQueries = [
+    '[status] = "open" AND [priority] = "high"',
+    '[active] = true',
+    '[category] = "urgent" OR [category] = "critical"',
+    '[created_at] > "2024-01-01"',
+  ];
 
   const handleQueryChange = (event: any) => {
     setQuery(event.text);
@@ -58,16 +64,6 @@ function App() {
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="mx-auto max-w-4xl space-y-4">
-        {/* Controls */}
-        <div className="flex gap-4 items-center">
-          <button
-            onClick={() => setSlideDirection(slideDirection === 'left' ? 'right' : 'left')}
-            className="px-4 py-2 text-sm rounded-md border bg-background hover:bg-accent"
-          >
-            Slide Direction: {slideDirection}
-          </button>
-        </div>
-
         {/* Query Editor */}
         <div>
           <label className="text-sm font-medium text-muted-foreground mb-2 block">
@@ -82,7 +78,8 @@ function App() {
             placeholder='Enter a filter query (e.g., [status] = "open")'
             isCollapsed={isCollapsed}
             onToggle={setIsCollapsed}
-            slideDirection={slideDirection}
+            queries={recentQueries}
+            onQuerySelect={setQuery}
           />
         </div>
 

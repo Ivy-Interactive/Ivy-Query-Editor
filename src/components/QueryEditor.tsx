@@ -41,15 +41,17 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   placeholder,
   className = "",
   autoFocus = false,
-  isCollapsed = false,
+  isCollapsed = true,
   onToggle,
-  dropdownSide = "left",
+  dropdownSide = "right",
   popoverTitle = "Filter Query",
   clearButtonText = "Clear",
   showPopoverTitle = true,
   buttonText = "Filters",
   showButtonText = false,
   editorClassName = "",
+  queries = [],
+  onQuerySelect,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
@@ -124,6 +126,16 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
     [view, readOnly]
   );
 
+  // Handle query selection from list
+  const handleQueryClick = useCallback(
+    (query: string) => {
+      if (onQuerySelect) {
+        onQuerySelect(query);
+      }
+    },
+    [onQuerySelect]
+  );
+
   // Update value when prop changes
   // NOTE: This is handled in useCodeMirror hook, but keeping for backward compatibility
   useEffect(() => {
@@ -175,23 +187,21 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
         className="w-[600px] p-3"
         sideOffset={8}
       >
-        {(showPopoverTitle || (value && value.length > 0)) && (
-          <div className="flex items-center justify-between mb-2">
-            {showPopoverTitle && (
-              <span className="text-sm font-medium">{popoverTitle}</span>
-            )}
-            {value && value.length > 0 && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClear}
-                className="h-7 text-xs ml-auto"
-              >
-                {clearButtonText}
-              </Button>
-            )}
-          </div>
-        )}
+        <div className="flex items-center justify-between mb-2 min-h-[28px]">
+          {showPopoverTitle && (
+            <span className="text-sm font-medium">{popoverTitle}</span>
+          )}
+          {value && value.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClear}
+              className="h-7 text-xs ml-auto"
+            >
+              {clearButtonText}
+            </Button>
+          )}
+        </div>
         <div
           ref={(el) => {
             // Use type assertion to handle ref callback
@@ -215,6 +225,33 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
           onClick={handleContainerClick}
           tabIndex={readOnly ? undefined : 0}
         />
+
+        {/* Queries List */}
+        {queries && queries.length > 0 && (
+          <div className="mt-3 space-y-1">
+            <span className="text-xs font-medium text-muted-foreground">
+              Recent Queries
+            </span>
+            <div className="space-y-1">
+              {queries.map((query, index) => (
+                <button
+                  key={index}
+                  onClick={() => handleQueryClick(query)}
+                  className={cn(
+                    "w-full text-left px-3 py-2 text-sm rounded-md",
+                    "bg-muted/50 hover:bg-muted",
+                    "transition-colors duration-150",
+                    "truncate cursor-pointer",
+                    "border border-transparent hover:border-border"
+                  )}
+                  title={query}
+                >
+                  {query}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </PopoverContent>
     </Popover>
   );

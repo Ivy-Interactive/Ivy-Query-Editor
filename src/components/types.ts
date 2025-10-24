@@ -63,6 +63,12 @@ export interface QueryEditorProps {
 
   /** Custom CSS class name for the editor container (CodeMirror) */
   editorClassName?: string;
+
+  /** List of saved/recent queries to display below the editor */
+  queries?: string[];
+
+  /** Callback when a query from the list is clicked */
+  onQuerySelect?: (query: string) => void;
 }
 
 /**
