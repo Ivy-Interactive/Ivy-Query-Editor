@@ -264,7 +264,12 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
         side={dropdownSide}
         align="start"
         className="p-4"
-        style={{ width: typeof popoverWidth === 'number' ? `${popoverWidth}px` : popoverWidth }}
+        style={{
+          width:
+            typeof popoverWidth === "number"
+              ? `${popoverWidth}px`
+              : popoverWidth,
+        }}
         sideOffset={8}
       >
         <div className="flex flex-col gap-2 justify-content-start">
@@ -274,7 +279,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
             )}
 
             {/* AI Filtering Toggle */}
-            <div className="flex items-center gap-2">
+            {/* <div className="flex items-center gap-2">
               <span className="text-xs text-muted-foreground">
                 {aiToggleLabel}
               </span>
@@ -283,7 +288,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
                 onCheckedChange={handleToggleLLMFiltering}
                 className={cn(llmFilteringEnabled && "ai-toggle-glow")}
               />
-            </div>
+            </div> */}
           </div>
 
           <div className="flex items-center gap-4">

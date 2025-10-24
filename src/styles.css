@@ -135,21 +135,16 @@
   color: #94a3b8;
 }
 
-/* Autocomplete styling - shadcn style */
+/* Autocomplete styling - uses CSS variables for theming with fallbacks */
 .cm-tooltip-autocomplete {
-  background-color: #ffffff;
-  border: 1px solid hsl(214.3 31.8% 91.4%);
+  background-color: hsl(var(--popover, 0 0% 100%));
+  border: 1px solid hsl(var(--border, 214.3 31.8% 91.4%));
   border-radius: 0.5rem;
   box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
   padding: 0.25rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
   overflow: hidden;
-}
-
-[data-theme="dark"] .cm-tooltip-autocomplete {
-  background-color: hsl(222.2 84% 4.9%);
-  border-color: hsl(217.2 32.6% 17.5%);
 }
 
 /* Autocomplete list */
@@ -170,26 +165,20 @@
   cursor: pointer;
   outline: none;
   transition: background-color 0.15s ease;
+  color: hsl(var(--popover-foreground, 222.2 84% 4.9%));
 }
 
 /* Hover state */
 .cm-tooltip-autocomplete li:hover {
-  background-color: hsl(210 40% 96.1%);
-}
-
-[data-theme="dark"] .cm-tooltip-autocomplete li:hover {
-  background-color: hsl(217.2 32.6% 17.5%);
+  background-color: hsl(var(--accent, 210 40% 96.1%));
+  color: hsl(var(--accent-foreground, 222.2 47.4% 11.2%));
 }
 
 /* Selected/active state */
 .cm-tooltip-autocomplete li[aria-selected="true"],
 .cm-tooltip-autocomplete .cm-completionMatchedText {
-  background-color: hsl(210 40% 96.1%);
-}
-
-[data-theme="dark"] .cm-tooltip-autocomplete li[aria-selected="true"],
-[data-theme="dark"] .cm-tooltip-autocomplete .cm-completionMatchedText {
-  background-color: hsl(217.2 32.6% 17.5%);
+  background-color: hsl(var(--accent, 210 40% 96.1%));
+  color: hsl(var(--accent-foreground, 222.2 47.4% 11.2%));
 }
 
 /* Completion icon - hide all icons */
@@ -210,25 +199,17 @@
   flex: 1;
   font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
   font-size: 0.875rem;
-  color: hsl(222.2 84% 4.9%);
-}
-
-[data-theme="dark"] .cm-completionLabel {
-  color: hsl(210 40% 98%);
+  color: inherit;
 }
 
 /* Completion detail (type info) */
 .cm-completionDetail {
   font-style: normal !important;
   font-size: 0.75rem;
-  color: hsl(215.4 16.3% 46.9%);
+  color: hsl(var(--muted-foreground, 215.4 16.3% 46.9%));
   margin-left: auto;
   padding-left: 1rem;
   flex-shrink: 0;
-}
-
-[data-theme="dark"] .cm-completionDetail {
-  color: hsl(215 20.2% 65.1%);
 }
 
 /* Scrollbar styling for dropdown */
@@ -241,12 +222,8 @@
 }
 
 .cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb {
-  background-color: hsl(214.3 31.8% 91.4%);
+  background-color: hsl(var(--border, 214.3 31.8% 91.4%));
   border-radius: 0.25rem;
-}
-
-[data-theme="dark"] .cm-tooltip-autocomplete > ul::-webkit-scrollbar-thumb {
-  background-color: hsl(217.2 32.6% 17.5%);
 }
 
 /* Lint panel styling */
