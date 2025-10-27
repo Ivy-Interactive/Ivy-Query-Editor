@@ -97,7 +97,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
 
   // Get status icon and tooltip based on state
   const getStatusConfig = () => {
-    const iconClass = "h-5 w-5";
+    const iconClass = "h-5 w-5"; // Icon is 20x20, container will be 32x32
 
     // If loading, show spinner regardless of status state
     if (isLoading) {
@@ -174,6 +174,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
     value,
     columns,
     onChange: handleChange,
+    onApply,
     theme,
     readOnly,
     placeholder,
@@ -273,24 +274,6 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
         sideOffset={8}
       >
         <div className="flex flex-col gap-2 justify-content-start">
-          <div className="flex items-center justify-between min-h-[28px]">
-            {showPopoverTitle && (
-              <span className="text-sm font-medium">{popoverTitle}</span>
-            )}
-
-            {/* AI Filtering Toggle */}
-            {/* <div className="flex items-center gap-2">
-              <span className="text-xs text-muted-foreground">
-                {aiToggleLabel}
-              </span>
-              <Switch
-                checked={llmFilteringEnabled}
-                onCheckedChange={handleToggleLLMFiltering}
-                className={cn(llmFilteringEnabled && "ai-toggle-glow")}
-              />
-            </div> */}
-          </div>
-
           <div className="flex items-center gap-4">
             <div
               className={cn(
@@ -342,16 +325,6 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
           {/* Action Buttons */}
           {value && value.length > 0 && (
             <div className="flex gap-2 self-start">
-              {onApply && (
-                <Button
-                  variant="default"
-                  size="sm"
-                  onClick={onApply}
-                  className="h-7 text-xs"
-                >
-                  {applyButtonText}
-                </Button>
-              )}
               <Button
                 variant="ghost"
                 size="sm"
@@ -365,7 +338,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
         </div>
 
         {/* Queries List */}
-        {queries && queries.length > 0 && (
+        {/* {queries && queries.length > 0 && (
           <div className="mt-2 space-y-1">
             <span className="text-xs font-medium text-muted-foreground">
               Recent Queries
@@ -390,7 +363,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </PopoverContent>
     </Popover>
   );

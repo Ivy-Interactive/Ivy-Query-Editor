@@ -19,6 +19,7 @@ interface UseCodeMirrorOptions {
   value: string;
   columns: ColumnDef[];
   onChange?: (text: string) => void;
+  onApply?: () => void;
   theme?: "light" | "dark";
   readOnly?: boolean;
   placeholder?: string;
@@ -33,6 +34,7 @@ export function useCodeMirror({
   value,
   columns,
   onChange,
+  onApply,
   theme = "light",
   readOnly = false,
   placeholder,
@@ -41,11 +43,17 @@ export function useCodeMirror({
   const [view, setView] = useState<EditorView | null>(null);
   const [containerEl, setContainerEl] = useState<HTMLElement | null>(null);
   const onChangeRef = useRef(onChange);
+  const onApplyRef = useRef(onApply);
 
   // Keep onChange ref up to date
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
+
+  // Keep onApply ref up to date
+  useEffect(() => {
+    onApplyRef.current = onApply;
+  }, [onApply]);
 
   // Initialize editor
   useEffect(() => {
@@ -55,7 +63,31 @@ export function useCodeMirror({
     const extensions: Extension[] = [
       // Basic setup
       history(),
-      keymap.of([...defaultKeymap, ...historyKeymap]),
+      keymap.of([
+        // Custom keymaps for applying filter
+        {
+          key: "Enter",
+          run: (view) => {
+            if (onApplyRef.current) {
+              onApplyRef.current();
+              return true;
+            }
+            return false;
+          },
+        },
+        {
+          key: "Mod-Enter", // Cmd+Enter on Mac, Ctrl+Enter on Windows/Linux
+          run: (view) => {
+            if (onApplyRef.current) {
+              onApplyRef.current();
+              return true;
+            }
+            return false;
+          },
+        },
+        ...defaultKeymap,
+        ...historyKeymap,
+      ]),
       EditorView.editable.of(!readOnly),
 
       // Base extensions (placeholder, etc.)
