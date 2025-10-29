@@ -1,6 +1,6 @@
 {
   "name": "filter-query-editor",
-  "version": "1.0.14",
+  "version": "2.0.0",
   "description": "ANTLR4-based filter query parser with React CodeMirror component, formatter, and evaluator for building advanced filters",
   "type": "module",
   "main": "dist/index.js",
