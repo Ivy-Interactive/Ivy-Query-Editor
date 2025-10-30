@@ -12,6 +12,10 @@ import './styles.css';
 export { QueryEditor } from './components/QueryEditor';
 export type { QueryEditorProps, QueryEditorChangeEvent } from './components/types';
 
+// Hooks exports
+export { useDropdownState } from './hooks/useDropdownState';
+export type { DropdownState } from './hooks/useDropdownState';
+
 // Parser exports
 export { parseQuery, parseQueryOrThrow } from './parser/QueryParser';
 

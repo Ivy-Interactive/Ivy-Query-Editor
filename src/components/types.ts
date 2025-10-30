@@ -99,6 +99,12 @@ export interface QueryEditorProps {
 
   /** Show loading spinner on status icon */
   isLoading?: boolean;
+
+  /** Whether the dropdown is currently open (controlled state) */
+  isOpen?: boolean;
+
+  /** Callback when the dropdown open state changes */
+  onOpenChange?: (isOpen: boolean) => void;
 }
 
 /**

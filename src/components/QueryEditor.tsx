@@ -13,6 +13,7 @@ import { parseQuery } from "../parser/QueryParser";
  * QueryEditor component - A simplified CodeMirror-based editor for filter queries
  *
  * @example
+ * Basic usage:
  * ```tsx
  * <QueryEditor
  *   value={query}
@@ -22,6 +23,31 @@ import { parseQuery } from "../parser/QueryParser";
  *   height={80}
  *   placeholder="Enter a filter query..."
  * />
+ * ```
+ *
+ * @example
+ * With dropdown state tracking:
+ * ```tsx
+ * import { QueryEditor, useDropdownState } from 'filter-query-editor';
+ *
+ * const MyComponent = () => {
+ *   const dropdownState = useDropdownState();
+ *
+ *   // Track when dropdown opens/closes
+ *   useEffect(() => {
+ *     console.log('Dropdown is:', dropdownState.isOpen ? 'open' : 'closed');
+ *   }, [dropdownState.isOpen]);
+ *
+ *   return (
+ *     <QueryEditor
+ *       value={query}
+ *       columns={columns}
+ *       onChange={handleChange}
+ *       isOpen={dropdownState.isOpen}
+ *       onOpenChange={dropdownState.setIsOpen}
+ *     />
+ *   );
+ * };
  * ```
  */
 export const QueryEditor: React.FC<QueryEditorProps> = ({
@@ -36,6 +62,8 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   autoFocus = false,
   customStyling = "",
   onApply,
+  isOpen,
+  onOpenChange,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
@@ -96,6 +124,7 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
       }}
       data-theme={theme}
       data-gramm="false"
+      data-dropdown-open={isOpen}
     />
   );
 };
