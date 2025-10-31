@@ -100,11 +100,27 @@ export interface QueryEditorProps {
   /** Show loading spinner on status icon */
   isLoading?: boolean;
 
-  /** Whether the dropdown is currently open (controlled state) */
+  /**
+   * Whether the dropdown is currently open (controlled state)
+   * Note: The QueryEditor component doesn't implement the dropdown UI itself.
+   * This prop is meant to be used by consumers who wrap this component in their own
+   * popover/dropdown implementation. The state will be exposed via data-dropdown-open attribute.
+   */
   isOpen?: boolean;
 
-  /** Callback when the dropdown open state changes */
+  /**
+   * Callback when the dropdown open state changes
+   * Note: This callback won't be automatically triggered by QueryEditor.
+   * It's meant to be connected to your wrapper component's dropdown open/close events.
+   */
   onOpenChange?: (isOpen: boolean) => void;
+
+  /**
+   * Callback that provides the current dropdown state whenever it's queried
+   * This allows the consumer to always know the current state without manual tracking
+   * The callback will be called with the current isOpen value passed to the component
+   */
+  onDropdownStateQuery?: (isOpen: boolean) => void;
 }
 
 /**

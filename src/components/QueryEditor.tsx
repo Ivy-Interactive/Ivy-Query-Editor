@@ -64,9 +64,11 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   onApply,
   isOpen,
   onOpenChange,
+  onDropdownStateQuery,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const onChangeRef = useRef(onChange);
+  const onDropdownStateQueryRef = useRef(onDropdownStateQuery);
   const [container, setContainer] = useState<HTMLDivElement | null>(null);
 
   // Update container when ref is set
@@ -80,6 +82,18 @@ export const QueryEditor: React.FC<QueryEditorProps> = ({
   useEffect(() => {
     onChangeRef.current = onChange;
   }, [onChange]);
+
+  // Keep onDropdownStateQuery ref up to date
+  useEffect(() => {
+    onDropdownStateQueryRef.current = onDropdownStateQuery;
+  }, [onDropdownStateQuery]);
+
+  // Notify consumer of current dropdown state whenever isOpen changes
+  useEffect(() => {
+    if (onDropdownStateQueryRef.current && isOpen !== undefined) {
+      onDropdownStateQueryRef.current(isOpen);
+    }
+  }, [isOpen]);
 
   // Handle change events from CodeMirror
   const handleChange = useCallback(

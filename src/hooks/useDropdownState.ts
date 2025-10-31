@@ -3,7 +3,7 @@
  * Can be used by consumers to control and track the dropdown state
  */
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 
 export interface DropdownState {
   /** Whether the dropdown is currently open */
@@ -16,6 +16,11 @@ export interface DropdownState {
   toggle: () => void;
   /** Function to set the dropdown state directly */
   setIsOpen: (isOpen: boolean) => void;
+  /**
+   * Ref object that always contains the current state
+   * Useful for accessing state in callbacks without stale closures
+   */
+  stateRef: React.MutableRefObject<boolean>;
 }
 
 /**
@@ -25,6 +30,7 @@ export interface DropdownState {
  * @returns DropdownState object with state and control functions
  *
  * @example
+ * Basic usage:
  * ```tsx
  * const dropdownState = useDropdownState();
  *
@@ -41,9 +47,27 @@ export interface DropdownState {
  *   console.log('Dropdown is:', dropdownState.isOpen ? 'open' : 'closed');
  * }, [dropdownState.isOpen]);
  * ```
+ *
+ * @example
+ * Using stateRef to always get the current state:
+ * ```tsx
+ * const dropdownState = useDropdownState();
+ *
+ * const handleSomething = () => {
+ *   // Always get the latest state, even in stale closures
+ *   const isCurrentlyOpen = dropdownState.stateRef.current;
+ *   console.log('Current state:', isCurrentlyOpen);
+ * };
+ * ```
  */
 export function useDropdownState(initialState: boolean = false): DropdownState {
   const [isOpen, setIsOpen] = useState<boolean>(initialState);
+  const stateRef = useRef<boolean>(initialState);
+
+  // Keep ref in sync with state
+  useEffect(() => {
+    stateRef.current = isOpen;
+  }, [isOpen]);
 
   const open = useCallback(() => {
     setIsOpen(true);
@@ -63,5 +87,6 @@ export function useDropdownState(initialState: boolean = false): DropdownState {
     close,
     toggle,
     setIsOpen,
+    stateRef,
   };
 }
