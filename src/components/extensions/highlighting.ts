@@ -33,10 +33,37 @@ const DARK_THEME = {
 };
 
 /**
+ * Check if text has at least one matching pair of square brackets
+ */
+function hasMatchingBracketPairs(text: string): boolean {
+  let openCount = 0;
+  let matchedPairs = 0;
+
+  for (const char of text) {
+    if (char === '[') {
+      openCount++;
+    } else if (char === ']') {
+      if (openCount > 0) {
+        matchedPairs++;
+        openCount--;
+      }
+    }
+  }
+
+  return matchedPairs > 0;
+}
+
+/**
  * Create decoration marks for tokens
  */
 function createDecorations(view: EditorView, theme: 'light' | 'dark'): DecorationSet {
   const text = view.state.doc.toString();
+
+  // Don't apply coloring if there are no matching bracket pairs
+  if (!hasMatchingBracketPairs(text)) {
+    return Decoration.none;
+  }
+
   const tokens = tokenizeQuery(text);
   const decorations: any[] = [];
   const colors = theme === 'light' ? LIGHT_THEME : DARK_THEME;
