@@ -230,10 +230,13 @@ function createBooleanCompletions(textBefore: string, columns: ColumnDef[]): Com
 /**
  * Create logical operator completions
  */
-function createLogicalCompletions(): Completion[] {
+function createLogicalCompletions(textBefore: string): Completion[] {
+  // Check if there's already a space before the cursor
+  const hasSpaceBefore = /\s$/.test(textBefore);
+
   return [
-    { label: 'AND', type: 'keyword', apply: ' AND ', boost: 10 },
-    { label: 'OR', type: 'keyword', apply: ' OR ', boost: 9 },
+    { label: 'AND', type: 'keyword', apply: hasSpaceBefore ? 'AND ' : ' AND ', boost: 10 },
+    { label: 'OR', type: 'keyword', apply: hasSpaceBefore ? 'OR ' : ' OR ', boost: 9 },
     { label: 'NOT', type: 'keyword', apply: 'NOT ', boost: 8 },
   ];
 }
@@ -304,7 +307,7 @@ function completeQuery(columns: ColumnDef[]) {
 
     // Logical operators (only if we're not in middle of an expression)
     if (/\]\s*$/.test(textBefore) || /(?:true|false|\d+|"[^"]*")\s*$/.test(textBefore)) {
-      const logicalCompletions = createLogicalCompletions();
+      const logicalCompletions = createLogicalCompletions(textBefore);
       return {
         from: context.pos,
         options: logicalCompletions,
