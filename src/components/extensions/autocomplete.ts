@@ -303,7 +303,8 @@ function completeQuery(columns: ColumnDef[]) {
     }
 
     // Logical operators (only if we're not in middle of an expression)
-    if (/\]\s*$/.test(textBefore) || /(?:true|false|\d+|"[^"]*")\s*$/.test(textBefore)) {
+    // Must have a space after the value/closing bracket to trigger AND/OR suggestions
+    if (/\]\s+$/.test(textBefore) || /(?:true|false|\d+|"[^"]*")\s+$/.test(textBefore)) {
       const logicalCompletions = createLogicalCompletions();
       return {
         from: context.pos,
