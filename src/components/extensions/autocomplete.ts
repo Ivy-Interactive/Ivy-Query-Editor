@@ -302,14 +302,8 @@ function completeQuery(columns: ColumnDef[]) {
       };
     }
 
-    // Logical operators (only after a complete filter expression)
-    // Don't show if we're right after a comparison operator that expects a value
-    const afterOperatorExpectingValue = /(?:equals|=|>|<|>=|<=|!=|contains|starts with|ends with|greater than|less than)\s*$/i.test(textBefore);
-
-    if (!afterOperatorExpectingValue &&
-        (/\]\s*$/.test(textBefore) ||
-         /(?:IS BLANK|IS NOT BLANK)\s*$/i.test(textBefore) ||
-         /(?:equals|=|>|<|>=|<=|!=|contains|starts with|ends with|greater than|less than)\s+(?:true|false|\d+|"[^"]*")\s*$/i.test(textBefore))) {
+    // Logical operators (only if we're not in middle of an expression)
+    if (/\]\s*$/.test(textBefore) || /(?:true|false|\d+|"[^"]*")\s*$/.test(textBefore)) {
       const logicalCompletions = createLogicalCompletions();
       return {
         from: context.pos,
