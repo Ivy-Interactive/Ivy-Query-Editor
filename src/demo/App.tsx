@@ -138,7 +138,10 @@ function App() {
             <label className="text-sm font-medium text-muted-foreground mb-2 block">
               Abstract Syntax Tree
             </label>
-            <div className="rounded-lg border bg-muted/50 p-4">
+            <div
+              className="rounded-lg border p-4"
+              style={{ backgroundColor: 'var(--color-semantic-surface-secondary)' }}
+            >
               <pre className="text-xs font-mono overflow-x-auto">
                 {JSON.stringify(parsedFilter, null, 2)}
               </pre>

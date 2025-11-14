@@ -1,3 +1,5 @@
+import ivyWebTokens from 'ivy-design-system/tailwind/ivy-web';
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -14,45 +16,50 @@ export default {
       },
     },
     extend: {
+      // Import Ivy Design System tokens
+      ...ivyWebTokens.theme.extend,
+      // Map shadcn color aliases to Ivy Design System semantic colors
       colors: {
-        border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
-        ring: "hsl(var(--ring))",
-        background: "hsl(var(--background))",
-        foreground: "hsl(var(--foreground))",
+        ...ivyWebTokens.theme.extend.colors,
+        // Shadcn compatibility mappings
+        border: "var(--color-shadcn-border)",
+        input: "var(--color-shadcn-input)",
+        ring: "var(--color-shadcn-ring)",
+        background: "var(--color-shadcn-background)",
+        foreground: "var(--color-shadcn-foreground)",
         primary: {
-          DEFAULT: "hsl(var(--primary))",
-          foreground: "hsl(var(--primary-foreground))",
+          DEFAULT: "var(--color-shadcn-primary)",
+          foreground: "var(--color-shadcn-primary-foreground)",
         },
         secondary: {
-          DEFAULT: "hsl(var(--secondary))",
-          foreground: "hsl(var(--secondary-foreground))",
+          DEFAULT: "var(--color-shadcn-secondary)",
+          foreground: "var(--color-shadcn-secondary-foreground)",
         },
         destructive: {
-          DEFAULT: "hsl(var(--destructive))",
-          foreground: "hsl(var(--destructive-foreground))",
+          DEFAULT: "var(--color-shadcn-destructive)",
+          foreground: "var(--color-shadcn-destructive-foreground)",
         },
         muted: {
-          DEFAULT: "hsl(var(--muted))",
-          foreground: "hsl(var(--muted-foreground))",
+          DEFAULT: "var(--color-shadcn-muted)",
+          foreground: "var(--color-shadcn-muted-foreground)",
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))",
+          DEFAULT: "var(--color-shadcn-accent)",
+          foreground: "var(--color-shadcn-accent-foreground)",
         },
         popover: {
-          DEFAULT: "hsl(var(--popover))",
-          foreground: "hsl(var(--popover-foreground))",
+          DEFAULT: "var(--color-shadcn-popover)",
+          foreground: "var(--color-shadcn-popover-foreground)",
         },
         card: {
-          DEFAULT: "hsl(var(--card))",
-          foreground: "hsl(var(--card-foreground))",
+          DEFAULT: "var(--color-shadcn-card)",
+          foreground: "var(--color-shadcn-card-foreground)",
         },
       },
       borderRadius: {
-        lg: "var(--radius)",
-        md: "calc(var(--radius) - 2px)",
-        sm: "calc(var(--radius) - 4px)",
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
       },
       keyframes: {
         "accordion-down": {
