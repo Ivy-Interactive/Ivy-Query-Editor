@@ -189,6 +189,12 @@ export function useCodeMirror({
       parent: container,
     });
 
+    // Disable Grammarly and spellcheck on the contenteditable element
+    const contentElement = editorView.contentDOM;
+    contentElement.setAttribute('data-gramm', 'false');
+    contentElement.setAttribute('data-gramm_editor', 'false');
+    contentElement.setAttribute('spellcheck', 'false');
+
     // Auto-focus if requested
     if (autoFocus) {
       editorView.focus();
