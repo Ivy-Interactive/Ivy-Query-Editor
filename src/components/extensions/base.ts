@@ -6,6 +6,7 @@ import { Extension } from '@codemirror/state';
 import { placeholder as placeholderExt } from '@codemirror/view';
 import { indentOnInput, bracketMatching } from '@codemirror/language';
 import { closeBrackets } from '@codemirror/autocomplete';
+import { bracketDeletion } from './bracket-deletion';
 
 interface BaseExtensionsOptions {
   placeholder?: string;
@@ -17,6 +18,8 @@ interface BaseExtensionsOptions {
  */
 export function createBaseExtensions(options: BaseExtensionsOptions): Extension[] {
   const extensions: Extension[] = [
+    // Bracket deletion (must come before closeBrackets for key priority)
+    bracketDeletion(),
     // Bracket matching and closing
     bracketMatching(),
     closeBrackets(),
