@@ -13,6 +13,8 @@ const BRACKET_PAIRS: Record<string, string> = {
   '[': ']',
   '(': ')',
   '{': '}',
+  '"': '"',
+  "'": "'",
 };
 
 const REVERSE_BRACKET_PAIRS: Record<string, string> = {
@@ -26,6 +28,14 @@ const REVERSE_BRACKET_PAIRS: Record<string, string> = {
  */
 function findMatchingClosing(doc: any, startPos: number, openChar: string, closeChar: string): number | null {
   const text = doc.sliceString(startPos);
+
+  // For quotes, just find the next matching quote (no nesting)
+  if (openChar === closeChar) {
+    const index = text.indexOf(closeChar);
+    return index !== -1 ? startPos + index : null;
+  }
+
+  // For brackets, track nesting depth
   let depth = 1;
 
   for (let i = 0; i < text.length; i++) {
@@ -47,6 +57,14 @@ function findMatchingClosing(doc: any, startPos: number, openChar: string, close
  */
 function findMatchingOpening(doc: any, endPos: number, openChar: string, closeChar: string): number | null {
   const text = doc.sliceString(0, endPos);
+
+  // For quotes, just find the previous matching quote (no nesting)
+  if (openChar === closeChar) {
+    const index = text.lastIndexOf(openChar);
+    return index !== -1 ? index : null;
+  }
+
+  // For brackets, track nesting depth
   let depth = 1;
 
   for (let i = text.length - 1; i >= 0; i--) {
@@ -82,21 +100,43 @@ export function bracketDeletion(): Extension {
         const pos = state.selection.main.head;
         const charBefore = state.doc.sliceString(pos - 1, pos);
 
-        // Deleting an opening bracket
+        // Check if it's a bracket/quote character
         if (BRACKET_PAIRS[charBefore]) {
           const closeChar = BRACKET_PAIRS[charBefore];
-          const matchingPos = findMatchingClosing(state.doc, pos, charBefore, closeChar);
 
-          if (matchingPos !== null) {
-            // Delete both brackets
-            changes.push({ from: pos - 1, to: pos }); // Delete opening bracket
-            changes.push({ from: matchingPos, to: matchingPos + 1 }); // Delete closing bracket
-          } else {
-            return false; // No matching bracket, use default behavior
+          // For quotes (symmetrical), try both directions
+          if (charBefore === closeChar) {
+            // Try forward first
+            let matchingPos = findMatchingClosing(state.doc, pos, charBefore, closeChar);
+
+            // If no match forward, try backward
+            if (matchingPos === null) {
+              matchingPos = findMatchingOpening(state.doc, pos - 1, charBefore, closeChar);
+            }
+
+            if (matchingPos !== null) {
+              // Delete both quotes
+              changes.push({ from: pos - 1, to: pos }); // Delete this quote
+              changes.push({ from: matchingPos, to: matchingPos + 1 }); // Delete matching quote
+            } else {
+              return false; // No matching quote, use default behavior
+            }
+          }
+          // For asymmetrical brackets (opening bracket)
+          else {
+            const matchingPos = findMatchingClosing(state.doc, pos, charBefore, closeChar);
+
+            if (matchingPos !== null) {
+              // Delete both brackets
+              changes.push({ from: pos - 1, to: pos }); // Delete opening bracket
+              changes.push({ from: matchingPos, to: matchingPos + 1 }); // Delete closing bracket
+            } else {
+              return false; // No matching bracket, use default behavior
+            }
           }
         }
-        // Deleting a closing bracket
-        else if (REVERSE_BRACKET_PAIRS[charBefore]) {
+        // Deleting a closing bracket (asymmetrical only)
+        else if (REVERSE_BRACKET_PAIRS[charBefore] && charBefore !== REVERSE_BRACKET_PAIRS[charBefore]) {
           const openChar = REVERSE_BRACKET_PAIRS[charBefore];
           const matchingPos = findMatchingOpening(state.doc, pos - 1, openChar, charBefore);
 
@@ -152,21 +192,43 @@ export function bracketDeletion(): Extension {
         const pos = state.selection.main.head;
         const charAfter = state.doc.sliceString(pos, pos + 1);
 
-        // Deleting an opening bracket
+        // Check if it's a bracket/quote character
         if (BRACKET_PAIRS[charAfter]) {
           const closeChar = BRACKET_PAIRS[charAfter];
-          const matchingPos = findMatchingClosing(state.doc, pos + 1, charAfter, closeChar);
 
-          if (matchingPos !== null) {
-            // Delete both brackets (in reverse order to maintain positions)
-            changes.push({ from: matchingPos, to: matchingPos + 1 }); // Delete closing bracket
-            changes.push({ from: pos, to: pos + 1 }); // Delete opening bracket
-          } else {
-            return false; // No matching bracket, use default behavior
+          // For quotes (symmetrical), try both directions
+          if (charAfter === closeChar) {
+            // Try forward first
+            let matchingPos = findMatchingClosing(state.doc, pos + 1, charAfter, closeChar);
+
+            // If no match forward, try backward
+            if (matchingPos === null) {
+              matchingPos = findMatchingOpening(state.doc, pos, charAfter, closeChar);
+            }
+
+            if (matchingPos !== null) {
+              // Delete both quotes
+              changes.push({ from: pos, to: pos + 1 }); // Delete this quote
+              changes.push({ from: matchingPos, to: matchingPos + 1 }); // Delete matching quote
+            } else {
+              return false; // No matching quote, use default behavior
+            }
+          }
+          // For asymmetrical brackets (opening bracket)
+          else {
+            const matchingPos = findMatchingClosing(state.doc, pos + 1, charAfter, closeChar);
+
+            if (matchingPos !== null) {
+              // Delete both brackets (in reverse order to maintain positions)
+              changes.push({ from: matchingPos, to: matchingPos + 1 }); // Delete closing bracket
+              changes.push({ from: pos, to: pos + 1 }); // Delete opening bracket
+            } else {
+              return false; // No matching bracket, use default behavior
+            }
           }
         }
-        // Deleting a closing bracket
-        else if (REVERSE_BRACKET_PAIRS[charAfter]) {
+        // Deleting a closing bracket (asymmetrical only)
+        else if (REVERSE_BRACKET_PAIRS[charAfter] && charAfter !== REVERSE_BRACKET_PAIRS[charAfter]) {
           const openChar = REVERSE_BRACKET_PAIRS[charAfter];
           const matchingPos = findMatchingOpening(state.doc, pos, openChar, charAfter);
 
