@@ -8,6 +8,7 @@ import { FiltersParser } from '../generated/FiltersParser';
 import { ASTBuilder } from './ASTBuilder';
 import { ErrorCollector } from './ErrorCollector';
 import { validateFilterGroup } from '../validator/SemanticValidator';
+import { preprocessBetween } from './BetweenPreprocessor';
 import { FilterGroup } from '../types/filter';
 import { ColumnDef } from '../types/column';
 import { ParseResult, ParseError } from '../types/parser';
@@ -31,12 +32,15 @@ export function parseQuery(
     };
   }
 
+  // Preprocess: Transform BETWEEN syntax to >= AND <=
+  const preprocessedQuery = preprocessBetween(query);
+
   // Create error collector
   const errorCollector = new ErrorCollector();
 
   try {
     // Step 1: Create lexer
-    const charStream = CharStream.fromString(query);
+    const charStream = CharStream.fromString(preprocessedQuery);
     const lexer = new FiltersLexer(charStream);
 
     // Remove default error listeners and add our custom one

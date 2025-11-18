@@ -64,12 +64,34 @@ const TOKEN_TYPE_MAP: Record<number, TokenType> = {
 };
 
 /**
+ * Find BETWEEN keywords in the text before preprocessing
+ * Returns array of {start, end} positions for BETWEEN keywords
+ */
+function findBetweenKeywords(text: string): Array<{start: number, end: number}> {
+  const betweenPositions: Array<{start: number, end: number}> = [];
+  const pattern = /\bBETWEEN\b/gi;
+  let match;
+
+  while ((match = pattern.exec(text)) !== null) {
+    betweenPositions.push({
+      start: match.index,
+      end: match.index + match[0].length
+    });
+  }
+
+  return betweenPositions;
+}
+
+/**
  * Tokenize query text using ANTLR lexer
  */
 export function tokenizeQuery(text: string): HighlightToken[] {
   if (!text) return [];
 
   try {
+    // First, find BETWEEN keywords before preprocessing
+    const betweenKeywords = findBetweenKeywords(text);
+
     // Create lexer
     const charStream = CharStream.fromString(text);
     const lexer = new FiltersLexer(charStream);
@@ -101,6 +123,19 @@ export function tokenizeQuery(text: string): HighlightToken[] {
         text: token.text || '',
       });
     }
+
+    // Add BETWEEN keywords as keyword tokens
+    for (const betweenPos of betweenKeywords) {
+      highlightTokens.push({
+        type: TokenType.KEYWORD,
+        start: betweenPos.start,
+        end: betweenPos.end,
+        text: text.substring(betweenPos.start, betweenPos.end),
+      });
+    }
+
+    // Sort by start position to maintain order
+    highlightTokens.sort((a, b) => a.start - b.start);
 
     return highlightTokens;
   } catch (error) {

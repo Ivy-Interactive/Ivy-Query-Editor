@@ -152,8 +152,9 @@ function createOperatorCompletions(columns: ColumnDef[], textBefore: string): Co
         { label: '>=', type: 'operator', apply: '>= ', boost: 6 },
         { label: '<=', type: 'operator', apply: '<= ', boost: 5 },
         { label: '!=', type: 'operator', apply: '!= ', boost: 4 },
-        { label: 'greater than', type: 'keyword', apply: 'greater than ', boost: 3 },
-        { label: 'less than', type: 'keyword', apply: 'less than ', boost: 2 },
+        { label: 'BETWEEN', type: 'keyword', apply: 'BETWEEN ', boost: 3 },
+        { label: 'greater than', type: 'keyword', apply: 'greater than ', boost: 2 },
+        { label: 'less than', type: 'keyword', apply: 'less than ', boost: 1 },
       );
       break;
 
@@ -172,6 +173,7 @@ function createOperatorCompletions(columns: ColumnDef[], textBefore: string): Co
         { label: '<', type: 'operator', apply: '< ', boost: 7 },
         { label: '>=', type: 'operator', apply: '>= ', boost: 6 },
         { label: '<=', type: 'operator', apply: '<= ', boost: 5 },
+        { label: 'BETWEEN', type: 'keyword', apply: 'BETWEEN ', boost: 4 },
       );
       break;
 
