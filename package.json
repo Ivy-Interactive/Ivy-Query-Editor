@@ -8,8 +8,9 @@
   "module": "dist/index.js",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     },
     "./style.css": "./dist/style.css"
   },
@@ -28,7 +29,7 @@
   },
   "scripts": {
     "dev": "vite",
-    "generate:parser": "antlr-ng docs/grammar/Filters.g4 -Dlanguage=TypeScript -o src/generated --generate-visitor && cd src/generated && for file in *.ts; do sed -i '' '1i\\\n// @ts-nocheck\\\n/* eslint-disable */\n' \"$file\"; done",
+    "generate:parser": "antlr-ng docs/grammar/Filters.g4 -Dlanguage=TypeScript -o src/generated --generate-visitor",
     "build": "npm run generate:parser && tsc && vite build --config vite.config.lib.ts",
     "build:demo": "vite build",
     "test": "vitest",

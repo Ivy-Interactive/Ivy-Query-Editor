@@ -26,6 +26,10 @@ export default defineConfig({
         '@codemirror/view',
         'codemirror',
         'antlr4ng',
+        '@radix-ui/react-dialog',
+        '@radix-ui/react-popover',
+        '@radix-ui/react-switch',
+        '@radix-ui/react-tooltip',
       ],
       output: {
         globals: {
